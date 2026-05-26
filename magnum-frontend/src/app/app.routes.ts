@@ -10,20 +10,20 @@ import { ProdutosComponent } from './features/page/produtos/produtos.component';
 
 export const routes: Routes = [
     // 🔓 Sem layout
-    {
-        path: 'login',
-        component: LoginComponent,
-        data: { 
-            hideNavbar: true,
-            hideGlobalAlert: true
-        },
-        title: 'Login - Magnum Tubos e Conexões'
-    },
+    // {
+    //     path: 'login',
+    //     component: LoginComponent,
+    //     data: { 
+    //         hideNavbar: true,
+    //         hideGlobalAlert: true
+    //     },
+    //     title: 'Login - Magnum Tubos e Conexões'
+    // },
     // 🔐 Com layout (navbar aparece)
     {
         path: '',
         component: LayoutComponent,
-        canActivate: [AuthGuard],
+        // canActivate: [AuthGuard],
         children: [
             { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
 
