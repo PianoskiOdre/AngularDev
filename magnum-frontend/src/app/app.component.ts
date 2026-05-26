@@ -29,6 +29,8 @@ interface NotificationData {
 })
 export class AppComponent implements OnInit {
 
+  title = 'Frontend - Magnum Tubos e Conexões!';
+
   apiEndpoint = environment.apiUrl;
   isPrduction = environment.production;
   apiDuration = environment.apiTimeout;
