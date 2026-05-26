@@ -1,0 +1,117 @@
+.notification {
+  position: fixed; /* Fixa na tela, não importa a rolagem */
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  
+  display: flex;
+  align-items: center; /* Centraliza verticalmente ícone, texto e botão */
+  gap: 15px; /* Espaçamento entre os elementos internos */
+  
+  padding: 15px 20px;
+  border-radius: 8px; /* Um pouco mais arredondado fica mais moderno */
+  background-color: teal;
+  color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra um pouco mais suave */
+  
+  max-width: 400px; /* Limita a largura para não esticar demais */
+  width: auto;
+  min-width: 300px;
+  
+  /* Animação suave de entrada (opcional, mas recomendado) */
+  animation: slideInDown 300ms ease-out forwards;
+}
+
+.notification-exit {
+  animation: slideOutUp 300ms ease-out forwards;
+}
+
+/* Garante que o texto não quebre o layout se for muito longo */
+.notification p {
+  margin: 0;
+  flex: 1; /* Ocupa o espaço restante */
+  word-wrap: break-word;
+  font-family: sans-serif; /* Garante legibilidade */
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* Estilo do botão de fechar (X) */
+.notification button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.notification button:hover {
+  opacity: 1;
+}
+
+.not-message {
+  flex: 1;
+}
+
+.btn-open-notification {
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  /* Opcional: adicionar um fundo circular se quiser destacar */
+  background-color: #333;
+  border-radius: 50%;
+}
+
+/* Estilo do botão de abrir (no ng-template) */
+/* Assumindo que você queira que ele também tenha um estilo básico se não tiver classe própria */
+button[aria-label="Abrir notificações"] {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+}
+
+/* Cores de Status */
+.success { 
+  background-color: #4caf50; 
+  border-left: 5px solid #388e3c; /* Detalhe visual extra */
+}
+
+.error { 
+  background-color: #f44336; 
+  border-left: 5px solid #d32f2f; /* Detalhe visual extra */
+}
+
+/* Animação de entrada */
+@keyframes slideInDown {
+  from {
+    transform: translateY(-150%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-150%);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,34 @@
+<div class="mds-input-wrapper">
+
+    <label *ngIf="label" [for]="id" class="mds-label">{{ label }}</label>
+
+    <div class="mds-input-container"> <!-- Wrapper para posicionar ícone -->
+
+        <!-- Ícone à esquerda (opcional) -->
+        <div class="mds-input-icon-left" *ngIf="hasLeftIcon">
+            <ng-content select="[icon-left]"></ng-content>
+        </div>
+
+        <input
+            [id]="id"
+            [type]="type"
+            [placeholder]="placeholder"
+            [value]="value"
+            (input)="onInputChange($event)"
+            (blur)="onTouched()"
+            [disabled]="isDisabled"
+            class="mds-input-field"
+        />
+
+        <!-- Ícone à direita (ex: mostrar/ocultar senha) -->
+        <div class="mds-input-icon-right" *ngIf="hasRightIcon">
+            <ng-content select="[icon-right]"></ng-content>
+        </div>
+
+        <!-- Aqui você pode adicionar mensagens de erro ou dicas abaixo do input -->
+        <div class="mds-input-error" *ngIf="isTouched && !value">
+            <span class="mds-input-error-text">{{ errorMessage }}</span>
+        </div>
+
+    </div>
+</div>

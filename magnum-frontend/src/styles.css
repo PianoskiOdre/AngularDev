@@ -1,0 +1,241 @@
+/* You can add global styles to this file, and also import other style files */
+@import '../projects/magnum-design-system/src/lib/styles/index.css';
+@import '../projects/magnum-design-system/src/lib/styles/mds.tokens.css';
+@import '../projects/magnum-design-system/src/lib/styles/_variables.css';
+
+body {
+  font-family: Arial, sans-serif; /* Exemplo */
+  background-color: #f5f5f5; /* Cinza claro fundo geral */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+}
+
+.page-container {
+    padding: 20px;
+    background: #f9f9f9;
+    min-height: 80vh;
+}
+
+h1 {
+    color: #333;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mds-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.mds-table th,
+.mds-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+.mds-table th {
+    background-color: #ffd700; /* Amarelo Ouro para o header */
+    color: black; /* Texto preto para contraste */
+    font-weight: 600;
+}
+
+.btn-add,
+.btn-generate,
+.btn-save {
+    padding: 12px 25px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-save:hover {
+    background-color: #62aeff;
+    transform: translateY(-2px);
+}
+
+.btn-open-green {
+    padding: 12px 25px;
+    background: #008537;
+    color: white;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-open-green:hover {
+    background: #1d9c52;
+    transform: translateY(-2px);
+}
+
+.btn-open-red {
+    padding: 12px 25px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-open-red:hover {
+    background: #db6666;
+    transform: translateY(-2px);
+}
+
+.btn-open-darkgray {
+    padding: 12px 25px;
+    background: darkgray;
+    color: rgb(0, 0, 0);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-open-darkgray:hover {
+    background: rgb(223, 223, 223);
+    transform: translateY(-2px);
+}
+
+.btn-open-goldenrod {
+    padding: 12px 25px;
+    background: goldenrod;
+    color: rgb(0, 0, 0);
+    border: none;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btn-open-goldenrod:hover {
+    background: rgb(202, 178, 118);
+    transform: translateY(-2px);
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #dc3545;
+    transition: color 0.3s ease;
+    padding: 5px;
+    line-height: 1;
+}
+
+.btn-close:hover {
+    color: #db6666;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    background-color: #fae196;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-delete:hover {
+    background-color: #e08c94;
+}
+
+.btn-success {
+    background-color: #00ff73;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-success:hover {
+    background-color: #aaffd0;
+}
+
+.estoque-baixo {
+    color: red;
+    font-weight: bold;
+}
+
+.card-config,
+.card-relatorio {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}

@@ -1,0 +1,86 @@
+.mds-alert {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    height: 56px;
+    min-width: 418px;
+    padding: 16px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    z-index: 9999;
+    font-family: Arial, sans-serif;
+    animation: slideInDown 300ms ease-out forwards;
+}
+
+.mds-alert-exit {
+    animation: slideOutUp 300ms ease-in forwards;
+}
+
+/* Keyframes */
+@keyframes slideInDown {
+  from {
+    transform: translateX(-50%) translateY(-150%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutUp {
+  from {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-50%) translateY(-150%);
+    opacity: 0;
+  }
+}
+
+.mds-alert-icon {
+  font-weight: normal;
+  font-size: 14px;
+  margin-right: 16px;
+}
+
+.mds-alert-message {
+  flex: 1;
+}
+
+.mds-alert-close {
+  background: none;
+  border: none;
+  font-size: 25px;
+  cursor: pointer;
+  opacity: 0.7;
+  margin-left: 12px;
+  padding: 0 4px;
+}
+
+.mds-alert-close:hover {
+  opacity: 1;
+}
+
+.mds-alert-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.mds-alert-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.mds-alert-warning {
+    background-color: #ffc107;
+    color: #fff;
+}
+
+.mds-alert-info {
+    background-color: #17a2b8;
+    color: #fff;
+}

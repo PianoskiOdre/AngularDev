@@ -1,0 +1,100 @@
+/* Reutiliza estruturas básicas de layout */
+.produtos-container { padding: 20px; max-width: 1200px; margin: 0 auto; }
+.layout-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; margin-bottom: 20px;}
+
+/* Lista Lateral */
+.lista-produtos { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); height: fit-content; }
+.header-lista { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.btn-add { background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.9rem; }
+
+.produto-list { list-style: none; padding: 0; margin: 0; max-height: 600px; overflow-y: auto; }
+.produto-list li {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.produto-list li:hover { background-color: #f8f9fa; }
+.produto-list li.active { background-color: #e7f1ff; border-left: 4px solid #007bff; }
+
+.prod-info { display: flex; flex-direction: column; }
+.prod-nome { font-weight: 600; color: #333; }
+.prod-codigo { font-size: 0.8rem; color: #888; }
+
+/* Destaque Visual para Estoque Baixo */
+.prod-estoque { font-size: 0.9rem; font-weight: bold; color: #555; }
+.prod-estoque.estoque-baixo { color: #dc3545; background: #ffebee; padding: 2px 6px; border-radius: 4px; }
+
+/* Formulário */
+.form-produto { background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.form-section { border: 1px solid #e0e0e0; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+.form-section legend { font-weight: bold; color: #007bff; padding: 0 10px; font-size: 0.9rem; }
+
+.form-row { display: flex; gap: 15px; margin-bottom: 15px; }
+.form-group { flex: 1; display: flex; flex-direction: column; }
+.form-group.full { flex: 100%; }
+
+label { margin-bottom: 5px; font-weight: 600; color: #555; font-size: 0.9rem; }
+input, select { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+input:focus, select:focus { border-color: #007bff; outline: none; }
+
+.help-text { color: #666; font-size: 0.75rem; margin-top: 4px; }
+
+.form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.btn-primary { background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+.btn-cancel { background: transparent; border: 1px solid #ccc; color: #666; padding: 12px 24px; border-radius: 4px; cursor: pointer; }
+
+.icon-checkbox-black {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.icon-checkbox-black:hover {
+  color: white;
+}
+
+.icon-checkbox-black:active {
+  transform: scale(0.95);
+  background-color: #ffffff;
+}
+
+.icon-checkbox-black i.material-icons {
+  font-size: 24px;
+  color: inherit;
+}
+
+.icon-checkbox {
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  user-select: none;
+}
+
+.icon-checkbox:hover {
+  color: #ffd700;
+}
+
+.icon-checkbox:active {
+  transform: scale(0.95);
+  background-color: #ffdd33;
+}
+
+.icon-checkbox i.material-icons {
+  font-size: 24px;
+  color: inherit;
+}
+
+@media (max-width: 768px) { .layout-grid { grid-template-columns: 1fr; } }

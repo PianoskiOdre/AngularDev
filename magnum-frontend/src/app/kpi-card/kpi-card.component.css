@@ -1,0 +1,117 @@
+/* kpi-card.component.css */
+.kpi-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 5px;
+}
+
+.kpi-card {
+    background-color: #ffffff;
+    width: 100%;
+    height: 100%;
+    /* Branco */
+    border-radius: 10px;
+    /* Bordas arredondadas */
+    padding: 24px;
+    /* Espaçamento interno */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Sombra suave */
+    transition: transform 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+}
+
+.kpi-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    /* mb-4 */
+}
+
+.kpi-title {
+    color: #6b7280;
+    /* text-gray-500 */
+    font-size: 0.875rem;
+    /* text-sm */
+    font-weight: 600;
+    /* font-semibold */
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    /* tracking-wider */
+}
+
+.kpi-icon {
+    padding: 0.75rem;
+    /* p-3 */
+    border-radius: 9999px;
+    /* rounded-full */
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    /* shadow-md */
+}
+
+.kpi-value-container {
+    display: flex;
+    align-items: center;
+}
+
+.kpi-value {
+    font-size: 1.875rem;
+    /* text-3xl */
+    font-weight: 700;
+    /* font-bold */
+    color: #111827;
+    /* text-gray-900 */
+}
+
+.kpi-subtitle {
+    margin-left: 15px;
+    /* ml-2 */
+    font-size: 0.875rem;
+    /* text-sm */
+    color: #6b7280;
+    /* text-gray-500 */
+}
+
+/* Círculo do ícone */
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    /* Ícone sempre branco */
+}
+
+/* Cores dos fundos dos ícones */
+.icon-blue {
+    background-color: #4f46e5 !important;
+    /* Azul indigo */
+}
+
+.icon-green {
+    background-color: #10b981;
+    /* Verde esmeralda */
+}
+
+.icon-emerald {
+    background-color: #22c55e;
+    /* Verde padrão */
+}
+
+.icon-orange {
+    background-color: #f97316;
+    /* Laranja */
+}
+
+/* Fallback caso nenhuma classe seja passada */
+.icon-circle:not([class*="icon-"]) {
+    background-color: #6b7280;
+    /* Cinza neutro */
+}

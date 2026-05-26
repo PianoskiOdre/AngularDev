@@ -1,0 +1,87 @@
+/* Container principal para espaçamento */
+.stock-alert-wrapper {
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Ou a fonte do seu projeto */
+}
+
+/* Base do Alerta */
+.alert-box {
+    display: flex;
+    align-items: flex-start; /* Alinha ícone ao topo do texto se houver quebra de linha */
+    padding: 16px;
+    border-radius: 6px;
+    border-left-width: 5px;
+    border-left-style: solid;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* --- Estilo Crítico (Vermelho) --- */
+.alert-critical {
+    background-color: #FDECEC; /* Fundo vermelho bem claro */
+    border-left-color: #EE443F; /* Vermelho forte na borda */
+    color: #EE443F; /* Texto vermelho escuro */
+}
+
+.alert-critical .icon-alert {
+    color: #EE443F;
+}
+
+.alert-critical .alert-link {
+    color: #EE443F;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.alert-critical .alert-link:hover {
+    color: #822825;
+    text-decoration: none;
+}
+
+/* --- Estilo Sucesso (Verde) --- */
+.alert-success {
+    background-color: #f0fff4; /* Fundo verde bem claro */
+    border-left-color: #38a169; /* Verde forte na borda */
+    color: #2f855a; /* Texto verde escuro */
+}
+
+.alert-success .icon-success {
+    color: #38a169;
+}
+
+/* --- Ícones --- */
+.alert-icon-container {
+    flex-shrink: 0; /* Impede que o ícone encolha */
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.alert-icon-container svg {
+    width: 24px;
+    height: 24px;
+}
+
+/* --- Textos --- */
+.alert-content {
+    flex: 1;
+}
+
+.alert-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.4;
+}
+
+.alert-message {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Acessibilidade: Foco visível para navegação por teclado */
+.alert-link:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}

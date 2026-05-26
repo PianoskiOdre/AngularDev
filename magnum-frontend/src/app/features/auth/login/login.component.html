@@ -1,0 +1,57 @@
+<app-loading *ngIf="loading"></app-loading>
+<div style="display: flex; justify-content: center; align-items: center; height: 100%; background: #ffd700;">
+  <mds-cards style="height: 600px; width: 500px;">
+
+    <div style="margin-bottom: 30px;">
+      <p style="display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 60px; height: 77px;">Magnum</p>
+      <p style="display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 24px; height: 29px;">Tubos e Conexões</p>
+    </div>
+    <div style="margin-bottom: 30px;">
+      <p style="display: flex; justify-content: center; align-items: center; font-weight: bold; font-size: 16px;">FAZER LOGIN</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+
+      <mds-input
+        label="E-mail"
+        placeholder="Digite o seu e-mail ou usuário?"
+        type="email"
+        formControlName="email"
+        [errorMessage]="getErrorMessage('email')"
+        required
+      ></mds-input>
+
+      <mds-input
+        label="Senha"
+        placeholder="Sua senha?"
+        type="password"
+        formControlName="senha"
+        [errorMessage]="getErrorMessage('senha')"
+        required
+      ></mds-input>
+
+      <div style="position: absolute;">
+        <mds-checkbox
+          label="Manter Login"
+          formControlName="rememberMe"
+        ></mds-checkbox>
+      </div>
+
+      <div style="position: relative; margin-bottom: 20px;">
+        <a href="#"
+          style="position: absolute; right: 0; top: 0; font-size: 14px; font-weight: bold; color: #000; text-decoration: none;">Esqueceu
+          sua senha?</a>
+      </div>
+
+      <div style="display: flex; justify-content: center; margin-top: 60px;">
+        <mds-button type="submit" variant="primary" size="G" [disabled]="loginForm.invalid">Entrar</mds-button>
+      </div>
+
+      <div style="display: flex; justify-content: center; align-items: center; margin-top: 30px;">
+        <ul>
+          <p>Não tem uma conta Magnum? <a href="#" style="text-decoration: none; color: #000; font-weight: bold;">Registre-se</a></p>
+        </ul>
+      </div>
+    </form>
+  </mds-cards>
+</div>

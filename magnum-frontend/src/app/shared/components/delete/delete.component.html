@@ -1,0 +1,37 @@
+<!-- delete.component.html -->
+<app-loading *ngIf="loading"></app-loading>
+
+<!-- O overlay do modal -->
+<div class="modal-overlay" *ngIf="isOpen" (click)="close()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Aviso</h2>
+      <!-- Botão 'X' para fechar -->
+      <button class="btn-close" (click)="close()">X</button>
+    </div>
+
+    <!-- Área de alerta (opcional, para mensagens de erro/sucesso) -->
+    <app-alert *ngIf="showAlert" [message]="alertMessage" [type]="alertType"></app-alert>
+
+    <div style="padding: 10px;">
+      <div style="margin-bottom: 20px; padding: 15px; border: 1px solid #b96900; border-radius: 10px; background: #ffe3a7;">
+        <h3 style="color: #ff9900;">Deseja realmente excluir o produto "{{ produtoSelecionado?.nome }}"?</h3>
+      </div>
+      
+      <!-- Botões de ação -->
+      <div style="margin-bottom: 20px; display: flex; justify-content: right; align-items: center; padding: 0 10px;">
+        <!-- Botão 'Não' apenas fecha o modal -->
+        <button (click)="close()" class="btn-delete">Não</button>
+        
+        <!-- Botão 'Sim' chama a função de confirmar exclusão -->
+        <button (click)="confirmarExclusao(produtoSelecionado.id)" class="btn-success">Sim</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Botão na tabela que abre o modal -->
+<!-- Este botão deve estar dentro do loop que gera as linhas da tabela -->
+<!-- <button class="btn-delete" (click)="abrirModalDeConfirmacao(produto)">
+  Excluir
+</button> -->

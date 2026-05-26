@@ -1,0 +1,290 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="produtos-container">
+  <h1 class="page-title">Gerenciar Produtos</h1>
+
+  <div class="layout-grid">
+
+    <!-- Lado Esquerdo: Lista de Produtos -->
+    <section class="lista-produtos">
+      <div class="header-lista">
+        <h2>Produtos Cadastrados</h2>
+        <mds-button variant="success" size="S" (click)="limparProduto()">
+          <span style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+            <i class="material-icons" style="font-size: 15px;">clear_all</i>
+            limpar
+          </span>
+        </mds-button>
+      </div>
+
+      <div class="search-box">
+        <mds-input
+          type="text"
+          [(ngModel)]="termoBusca"
+          placeholder="Buscar por nome ou código..."
+          (keyup.enter)="buscarPorNome()"
+          (input)="buscarPorNome()"
+        ></mds-input>
+      </div>
+
+      <ul class="produto-list">
+        <li *ngFor="let prod of produtosFiltrados" (click)="selecionarProduto(prod)"
+          [class.active]="prod.id === produtoSelecionado?.id">
+          <div class="prod-info">
+            <span
+              style="display: flex; justify-content: flex-start; align-items: center; gap: 10px; font-weight: bold;">
+              <i class="material-icons">inventory_2</i>
+              {{ prod.nome }}
+            </span>
+            <span>
+              <label>Categoria: </label>
+              {{ prod.categoria }}
+            </span>
+            <span class="prod-codigo">
+              <label>Código/SKU: </label>
+              {{ prod.codigoBarras }}
+            </span>
+          </div>
+          <!-- <div class="prod-estoque" [class.estoque-baixo]="prod.quantidade <= prod.estoqueMinimo">
+            Qtd: {{ prod.quantidade }}
+          </div> -->
+        </li>
+      </ul>
+      <div *ngIf="produtosFiltrados.length === 0"
+        style="text-align: center; padding: 40px; color: #888; background: #fff;">
+        Nenhuma produtos encontrada.
+      </div>
+    </section>
+
+    <!-- Lado Direito: Formulário -->
+    <section class="form-produto">
+      <h2 style="margin-bottom: 20px;">{{ modoEdicao ? 'Editar Produto' : 'Adicionar Produto' }}</h2>
+
+      <form [formGroup]="produtoForm" (ngSubmit)="salvar()">
+
+        <input type="hidden" formControlName="id"/>
+
+        <!-- Seção 1: Dados Principais -->
+        <fieldset class="form-section">
+          <legend style="color: #000;">Dados Principais</legend>
+          <div class="form-row">
+            <div class="form-group full">
+              <mds-input label="Nome do Produto" type="text" formControlName="nome"
+                placeholder="Ex: Tubo PVC 100mm"></mds-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <mds-input label="Código / SKU" formControlName="codigoBarras" placeholder="Ex: TUB-100"></mds-input>
+            </div>
+            <div class="form-group">
+              <mds-select
+                label="Categoria"
+                formControlName="categoria"
+                [options]="categorias"
+                [required]="true"
+                [value]="produtoForm.get('categoria')?.value"
+                [class.is-invalid]="produtoForm.get('categoria')?.invalid && produtoForm.get('categoria')?.touched"
+              ></mds-select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Seção 2: Preços e Estoque -->
+        <fieldset class="form-section">
+          <legend style="color: #000;">Preços e Estoque</legend>
+          <div class="form-row">
+            <div class="form-group">
+              <mds-input label="Preço de Custo (R$)" type="number" formControlName="precoCusto" min="0.01" step="0.01"></mds-input>
+            </div>
+            <div class="form-group">
+              <mds-input label="Preço de Venda (R$)" type="number" formControlName="precoVenda" min="0.01" step="0.01"
+                [class.is-invalid]="produtoForm.get('precoCusto')?.invalid && produtoForm.get('precoCusto')?.touched"
+              ></mds-input>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <mds-input type="number" step="0" min="0" label="Estoque Atual" formControlName="estoque"></mds-input>
+            </div>
+            <div class="form-group">
+              <mds-input label="Estoque Mínimo (Alerta)" type="number"></mds-input>
+              <small class="help-text">Usado para alertas visuais no Dashboard.</small>
+            </div>
+          </div>
+          <!-- OPCIONAL: Mostrar preview do lucro/margem -->
+            <div *ngIf="produtoForm.get('precoCusto')?.value && produtoForm.get('precoVenda')?.value" class="mt-2">
+                <small class="text-muted">
+                    Lucro estimado: {{ (produtoForm.get('precoVenda')?.value - produtoForm.get('precoCusto')?.value) | currency }}<br>
+                    Markup: {{ calcularMargem(produtoForm.get('precoVenda')?.value, produtoForm.get('precoCusto')?.value) }}%
+                </small>
+            </div>
+        </fieldset>
+
+        <div class="form-actions">
+          <mds-button type="submit" variant="primary" size="M" [disabled]="produtoForm.invalid || loading">
+            <span style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+              <i class="material-icons" style="font-size: 18px;">{{ modoEdicao ? 'update' : 'save' }}</i>
+              {{ modoEdicao ? 'Atualizar' : 'Salvar Produto' }}
+            </span>
+          </mds-button>
+        </div>
+      </form>
+    </section>
+
+  </div>
+
+  <div *ngIf="!loading && !error"
+    style="margin-bottom: 15px; overflow-x: auto; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); border-radius: 12px;">
+
+    <table class="mds-table">
+      <thead>
+        <tr style="background-color: #f2f2f2;">
+          <th>
+            <span class="icon-checkbox-black" role="checkbox" (click)="toggleSelecionarTodos()"
+              [attr.aria-label]="selecionarTodos ? 'Desmarcar todos' : 'Selecionar todos'">
+
+              <i class="material-icons">{{ selecionarTodos ? 'check_box' : 'check_box_outline_blank'
+                }}</i>
+            </span>
+          </th>
+          <th>ID</th>
+          <th>Nome</th>
+          <th>Categoria</th>
+          <th>Codigo/SKU</th>
+          <th>Estoque</th>
+          <th>P. Custo (R$)</th>
+          <th *ngIf="isAdmin">P. Venda (R$)</th>
+          <th *ngIf="isAdmin">P. Lucro (R$)</th>
+          <th *ngIf="isAdmin">Margem (%)</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of produtosFiltrados">
+          <td>
+            <span class="icon-checkbox" role="checkbox" [attr.aria-checked]="selecionados.includes(p.id)" tabindex="0"
+              (click)="toggleSelecao(p.id)" [attr.aria-label]="'Selecionar ' + p.nome">
+
+              <i class="material-icons">{{ selecionados.includes(p.id) ? 'check_box' :
+                'check_box_outline_blank' }}</i>
+            </span>
+          </td>
+          <td>
+            <a style="display: flex; justify-content: center; align-items: center;">{{ p.id }}</a>
+          </td>
+          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.nome }}</a></td>
+          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.categoria || 'Sem categoria'
+              }}</a></td>
+          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.codigoBarras }}</a></td>
+          <td>
+            <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
+              <div style="display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer;">
+                <div style="display: flex; justify-content: center; align-items: center;">
+                  <span>{{ p.estoque }}</span>
+                </div>
+                <div style="display: flex; justify-content: center; align-items: center;">
+                  <mds-tooltip [text]="getEstoqueStatus(p.estoque).tooltip"
+                    [style.color]="getEstoqueStatus(p.estoque).color" [position]="'bottom'">
+                    <i class="material-icons" style="font-size: 20px; vertical-align: middle;">{{
+                      getEstoqueStatus(p.estoque).icon }}</i>
+                  </mds-tooltip>
+                </div>
+              </div>
+            </div>
+          </td>
+          <!-- Preço Custo -->
+          <td>{{ (p.precoCusto || 0) | currency }}</td>
+
+          <!-- Preço Venda -->
+          <td *ngIf="isAdmin">{{ (p.precoVenda || 0) | currency }}</td>
+
+          <!-- Lucro -->
+          <td *ngIf="isAdmin">{{ ((p.precoVenda || 0) - (p.precoCusto || 0)) | currency }}</td>
+
+          <!-- Margem % -->
+          <td *ngIf="isAdmin" style="font-weight: bold;"
+            [style.color]="isMargemNegativa(p.precoVenda, p.precoCusto) ? '#dc3545' : isMargemBaixa(p.precoVenda, p.precoCusto) ? '#ffc107' : '#28a745'">
+
+            {{ calcularMargem(p.precoVenda, p.precoCusto) }}%
+          </td>
+          <td>
+            <mds-button variant="danger" size="S" (click)="abrirModalExcluir(p)" >
+              <span style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                <i class="material-icons" style="font-size: 20px; vertical-align: middle;">delete</i>
+                Excluir
+              </span>
+            </mds-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="produtosFiltrados.length === 0"
+      style="text-align: center; padding: 40px; color: #888; background: #fff;">
+      Nenhuma produtos encontrada.
+    </div>
+  </div>
+  <div style="display: flex; justify-content: center; align-items: center; margin-top: 15px;">
+        <mds-button variant="outline-secondary" size="S" (click)="onPageChange(currentPage - 1)"
+            [disabled]="currentPage === 1">
+            <span class="material-icons">chevron_left</span>
+        </mds-button>
+        <span style="margin: 0 10px;">Página {{ currentPage }}</span>
+        <mds-button variant="outline-secondary" size="S" (click)="onPageChange(currentPage + 1)"
+            [disabled]="currentPage === 1">
+            <span class="material-icons">chevron_right</span>
+        </mds-button>
+    </div>
+  <!-- Selecionar todos, Excluir Selecionados e Exportar Seleção-->
+    <div style="display: flex; justify-content: flex-start; align-items: center; gap: 10px; margin-top: 15px;">
+
+        <mds-button variant="outline-primary" size="M" (click)="toggleSelecionarTodos()">
+            <span style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                <i class="material-icons" style="font-size: 17px; vertical-align: middle;">select_all</i>
+                {{ selecionarTodos ? 'Desmarcar Todos' : 'Selecionar Todos' }}
+            </span>
+        </mds-button>
+
+        <!-- <mds-button variant="outline-secondary" size="M" 
+            [disabled]="selecionados.length === 0">
+            <span style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                <i class="material-icons" style="font-size: 17px; vertical-align: middle;">file_download</i>
+                Exportar Seleção
+            </span>
+        </mds-button> -->
+
+        <mds-button variant="outline-danger" size="M" (click)="abrirModalExcluirSelecionados()"
+            [disabled]="selecionados.length === 0">
+            <span style="display: flex; justify-content: center; align-items: center; gap: 5px;">
+                <i class="material-icons" style="font-size: 17px; vertical-align: middle;">delete</i>
+                Excluir Seleção
+            </span>
+        </mds-button>
+    </div>
+</div>
+
+<mds-modal
+  [isOpen]="modalExcluirSelecionadosVisivel"
+  title="Confirmar Exclusão"
+  (close)="fecharModalExcluirSelecionados()"
+  >
+  <p style="display: flex; justify-content: center; align-items: center;">Tem certeza que deseja excluir os produtos selecionados?</p>
+  <p style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-bottom: 10px;">Quantidade de produtos:<strong style="font-weight: bold;">{{ selecionados.length }}</strong></p>
+  <p style="display: flex; justify-content: center; align-items: center; font-weight: 200;">Esta ação não pode ser desfita.</p>
+
+  <div mds-modal-footer>
+      <mds-button variant="danger" (click)="fecharModalExcluirSelecionados()">Cancelar</mds-button>
+      <mds-button variant="success" (click)="confirmarExclusaoSelecionados()">Confirmar</mds-button>
+  </div>
+</mds-modal>
+
+<mds-modal [isOpen]="modalExcluirVisivel" title="Confirmar Exclusão" (close)="fecharModalExcluir()">
+  <p>Tem certeza que deseja excluir o produto <strong>{{ produtoExcluir?.nome }}</strong>?</p>
+  <p>Esta ação não pode ser desfita.</p>
+
+  <div mds-modal-footer>
+    <mds-button variant="danger" (click)="fecharModalExcluir()">Cancelar</mds-button>
+    <mds-button variant="success" (click)="confirmarExclusao()">Confirmar</mds-button>
+  </div>
+</mds-modal>

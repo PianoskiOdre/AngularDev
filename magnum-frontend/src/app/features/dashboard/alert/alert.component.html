@@ -1,0 +1,15 @@
+<div *ngIf="visible" [class.alert-exit]="isLeaving" class="alert {{ alertClass }}" role="alert">
+  <div class="alert-icon">
+    <!-- Switch para escolher o ícone SVG -->
+    <ng-container [ngSwitch]="type">
+      <app-icon-success *ngSwitchCase="'success'"></app-icon-success>
+      <app-icon-error *ngSwitchCase="'error'"></app-icon-error>
+      <app-icon-warning *ngSwitchCase="'warning'"></app-icon-warning>
+      <app-icon-info *ngSwitchDefault></app-icon-info>
+    </ng-container>
+  </div>
+  <span class="alert-message">{{ message }}</span>
+  <button type="button" class="alert-close" (click)="close()" aria-label="Fechar">
+    &times;
+  </button>
+</div>

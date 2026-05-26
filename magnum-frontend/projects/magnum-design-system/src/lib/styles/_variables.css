@@ -1,0 +1,14 @@
+/* src/lib/styles/variables.css */
+:root {
+  --mds-primary: #000000;
+  --mds-secondary: #FFD700;
+  --mds-neutral: #9E9E9E;
+  --mds-danger: #F44336;
+  --mds-success: #4CAF50;
+  --mds-info: #2196F3;
+  --mds-outline-primary: #FFD700;
+  --mds-font-base: Arial, sans-serif;
+  --mds-radius-sm: 10px;
+  --mds-spacing-sm: 8px;
+  --mds-spacing-md: 16px;
+}

@@ -1,0 +1,24 @@
+<!-- Botão Principal -->
+<button 
+  class="btn-exportar-selecionados" 
+  (click)="abrirModal()"
+  [disabled]="qtdSelecionados === 0">
+  Exportar Selecionados
+</button>
+
+<!-- Modal -->
+<div *ngIf="exibirModal" class="modal-overlay" (click)="fecharModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>Confirmar Exportação</h3>
+      <button class="close-btn" (click)="fecharModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p>Você está prestes a exportar <strong>{{ qtdSelecionados }}</strong> produto(s).</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancelar" (click)="fecharModal()">Cancelar</button>
+      <button class="btn-confirmar" (click)="processarExportacao()">Confirmar</button>
+    </div>
+  </div>
+</div>

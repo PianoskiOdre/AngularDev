@@ -1,0 +1,100 @@
+<app-loading *ngIf="loading"></app-loading>
+<div class="relatorios-wrapper">
+  <div style="margin-bottom: 20px;">
+    <mds-cards>
+      <h1>Filtros de Movimentação</h1>
+
+      <form [formGroup]="filtroForm" (ngSubmit)="buscarRelatorio()">
+        <div style="display: flex; justify-content: space-around; align-items: center; gap: 10px; overflow-x: auto;">
+
+          <label>Data Início: </label>
+          <mds-input type="date" id="dataInicio" formControlName="dataInicio"></mds-input>
+
+          <span>Até</span>
+
+          <label>Data Fim: </label>
+          <mds-input type="date" id="dataFim" formControlName="dataFim"></mds-input>
+
+          <mds-select id="tipoMovimento" formControlName="tipoMovimento" [options]="tipoMovimentos"></mds-select>
+
+          <label>Produto (Opcional): </label>
+
+          <mds-select id="produtoId" formControlName="produtoId" [options]="produtosOptions"></mds-select>
+
+          <!-- <mds-button variant="primary" size="S" (click)="buscarRelatorio()">
+          <span style="display: flex; justify-content: space-around; align-items: center; gap: 10px;">
+            <i class="material-icons" style="font-size: 15px;">sort</i>
+            Filtrar
+          </span>
+        </mds-button> -->
+
+          <mds-button type="submit" variant="primary" size="S" [disabled]="loading || filtroForm.invalid">
+            <span>
+              {{ loading ? 'Carregando...' : 'Gerar Relatório' }}
+            </span>
+          </mds-button>
+
+          <mds-button variant="neutral" size="S" (click)="limparFiltros()"><span>
+              Limpar
+            </span></mds-button>
+
+          <mds-button variant="danger" size="S" (click)="exportarParaPDF()" [disabled]="movimentos.length === 0">
+            <span style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+              <i class="material-icons" style="font-size: 15px;">picture_as_pdf</i>
+              Baixar PDF
+            </span>
+          </mds-button>
+
+        </div>
+      </form>
+    </mds-cards>
+  </div>
+
+  <!-- Tabela de Dados -->
+  <div class="table-container">
+    <table class="magnum-table">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Produto</th>
+          <th>Categoria</th>
+          <th>Tipo</th> <!-- Entrada/Saída -->
+          <th>Qtd</th>
+          <th>Valor Unit.</th>
+          <th>Total</th>
+          <th>Responsável</th>
+          <th>Observação</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let mov of movimentos">
+          <td>{{ mov.dataMovimento | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ mov.produtoNome }}</td>
+          <td>{{ mov.categoriaNome }}</td>
+          <td>
+            <span [class.entrada]="mov.tipoMovimento === 'Entrada'" [class.saida]="mov.tipoMovimento === 'Saída'">
+              {{ mov.tipoMovimento }}
+            </span>
+          </td>
+          <td>{{ mov.quantidade }}</td>
+          <td>{{ mov.valorUnitario | currency:'BRL' }}</td>
+          <td><strong>{{ mov.valorTotal | currency:'BRL' }}</strong></td>
+          <td>{{ mov.responsavel }}</td>
+          <td>{{ mov.observacao }}</td>
+        </tr>
+
+        <!-- Linha de Totalizador no Rodapé da Tabela -->
+        <tr class="total-row" *ngIf="movimentos.length > 0">
+          <td colspan="6">TOTAL DO PERÍODO</td>
+          <td>{{ getTotal() | currency:'BRL' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="!loading && movimentos.length === 0" class="no-data">
+      <i class="material-icons" style="font-size: 48px; color: #ccc;">inbox</i>
+      <p>Nenhum movimento encontrado no período selecionado.</p>
+      <small>Tente ajustar as datas ou verificar se há vendas/compras registradas.</small>
+    </div>
+  </div>
+</div>

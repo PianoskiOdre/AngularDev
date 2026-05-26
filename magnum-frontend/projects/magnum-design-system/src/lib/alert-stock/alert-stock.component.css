@@ -1,0 +1,82 @@
+/* projects/design-system/src/lib/alert/alert.component.css */
+
+.ds-alert-stock {
+    display: flex;
+    align-items: flex-start;
+    /* Centraliza ícone e texto verticalmente */
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-left-width: 5px;
+    border-left-style: solid;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.ds-alert-stock-icon {
+    margin-right: var(--ds-spacing-sm);
+    flex-shrink: 0;
+}
+
+.ds-alert-stock-icon svg {
+    width: 20px;
+    height: 20px;
+    margin-right: 12px;
+}
+
+.ds-alert-stock-content {
+    flex-grow: 1;
+}
+
+.ds-alert-stock-content p {
+    margin: 0;
+    font-size: 14px;
+}
+
+.ds-alert-stock-title {
+    font-weight: bold;
+    margin-bottom: 4px !important;
+}
+
+.ds-alert-stock-message {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.ds-alert-stock-link {
+    color: inherit;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Acessibilidade: Foco visível para navegação por teclado */
+.ds-alert-stock-link:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+}
+
+/* Variantes de cor */
+.ds-alert-stock-success {
+    background-color: #f0fff4;
+    color: #2f855a;
+    border-left-color: #38a169;
+}
+
+.ds-alert-stock-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left-color: #ffc107;
+}
+
+.ds-alert-stock-danger {
+    background-color: #fff5f5;
+    color: #c53030;
+    border-left-color: #e53e3e;
+}
+
+.ds-alert-stock-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-left-color: #0056b3;
+}

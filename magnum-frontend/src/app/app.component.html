@@ -1,0 +1,7 @@
+<router-outlet>
+    <div *ngIf="currentAlert">
+        <mds-alert [message]="currentAlert.message" [type]="currentAlert.type" (close)="onClose()">
+
+        </mds-alert>
+    </div>
+</router-outlet>

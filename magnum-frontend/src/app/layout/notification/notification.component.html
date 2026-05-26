@@ -1,0 +1,38 @@
+<div *ngIf="visible; else openNot" [class.notification-exit]="isLeaving" class="notification {{ notFon }}" [ngClass]="type">
+    <svg width="24" height="24" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g clip-path="url(#clip-open)">
+            <path
+                d="M17.28 7.2256V3.82M17.28 7.2256C21.4263 7.38487 24.6979 10.8062 24.6715 14.9555V17.5475C24.6715 20.9834 27.36 21.8416 27.36 23.5595C27.36 24.4134 27.36 25.42 26.5853 25.42H7.97472C7.2 25.42 7.2 24.4134 7.2 23.5595C7.2 21.8416 9.88848 20.9834 9.88848 17.5475V14.9555C9.8621 10.8062 13.1337 7.38487 17.28 7.2256M12.5755 25.42C12.7109 26.6469 13.0162 27.6376 13.9349 28.4613C15.8385 30.1679 18.7215 30.1679 20.6251 28.4613C21.5438 27.6376 22.405 26.6469 22.5403 25.42H12.5755"
+                stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+        </g>
+        <defs>
+            <clipPath id="clip-open">
+                <rect width="29.1667" height="29.1667" fill="white" transform="scale(1.2)" />
+            </clipPath>
+        </defs>
+    </svg>
+    <ng-container [ngSwitch]="type">
+      <div *ngSwitchCase="'success'"></div>
+      <div *ngSwitchCase="'error'"></div>
+      <div *ngSwitchDefault></div>
+    </ng-container>
+    <span class="not-message">{{ message }}</span>
+    <button type="button" (click)="close()" aria-label="Fechar notificação" title="Fechar">&times;</button>
+</div>
+
+<ng-template #openNot>
+    <button (click)="open()" class="btn-open-notification" aria-label="Abrir notificações">
+        <svg width="24" height="24" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g clip-path="url(#clip-closed)">
+                <path
+                    d="M17.28 7.2256V3.82M17.28 7.2256C21.4263 7.38487 24.6979 10.8062 24.6715 14.9555V17.5475C24.6715 20.9834 27.36 21.8416 27.36 23.5595C27.36 24.4134 27.36 25.42 26.5853 25.42H7.97472C7.2 25.42 7.2 24.4134 7.2 23.5595C7.2 21.8416 9.88848 20.9834 9.88848 17.5475V14.9555C9.8621 10.8062 13.1337 7.38487 17.28 7.2256M12.5755 25.42C12.7109 26.6469 13.0162 27.6376 13.9349 28.4613C15.8385 30.1679 18.7215 30.1679 20.6251 28.4613C21.5438 27.6376 22.405 26.6469 22.5403 25.42H12.5755"
+                    stroke="white" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
+            </g>
+            <defs>
+                <clipPath id="clip-closed">
+                    <rect width="29.1667" height="29.1667" fill="white" transform="scale(1.2)" />
+                </clipPath>
+            </defs>
+        </svg>
+    </button>
+</ng-template>

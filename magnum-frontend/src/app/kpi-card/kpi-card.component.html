@@ -1,0 +1,13 @@
+<!-- kpi-card.component.html -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-header">
+      <h3 class="kpi-title">{{ title }}</h3>
+      <div [ngClass]="iconClass" class="icon-circle" [innerHTML]="getIconSvg(iconName)"></div>
+    </div>
+    <div class="kpi-value-container">
+      <p class="kpi-value">{{ value ?? '--' }}</p>
+      <p class="kpi-subtitle">{{ subtitle }}</p>
+    </div>
+  </div>
+</div>

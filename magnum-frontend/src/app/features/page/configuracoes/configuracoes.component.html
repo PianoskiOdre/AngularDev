@@ -1,0 +1,85 @@
+<app-loading *ngIf="loading"></app-loading>
+<div style="display: flex; flex-direction: column; row-gap: 20px; max-width: 800px; margin: 0 auto; padding: 20px;">
+  <h1 class="page-title">Configurações do Sistema</h1>
+  <mds-cards>
+    <h2 style="margin-bottom: 20px; font-size: 1.2rem;">Dados da Empresa</h2>
+    <form [formGroup]="configForm" (ngSubmit)="salvarEmpresa()">
+      <mds-input
+        type="text"
+        label="Nome da Empresa (Somente Leitura)"
+        formControlName="nome"
+        [readonly]="true"
+        >
+      </mds-input>
+
+      <mds-input
+        label="Contato no e-mail (Seguro)"
+        type="text"
+        formControlName="email"
+        [value]="emailMascarado"
+        [readonly]="true"
+      ></mds-input>
+      <small class="text-muted">Este e-mail é gerenciado no perfil do administrador.</small>
+
+      <!-- <mds-input type="text" label="Contato no e-mail" formControlName="email">
+      </mds-input> -->
+
+      <div class="mds-row">
+        <mds-input
+          type="text"
+          label="CNPJ"
+          formControlName="cnpj"
+          maxlength="14"
+          placeholder="00.000.000/0000-00">
+        </mds-input>
+        <small *ngIf="configForm.get('cnpj')?.invalid && configForm.get('cnpj')?.touched" class="text-danger">
+          CNPJ inválido.
+        </small>
+
+        <mds-input type="text" label="Telefone" formControlName="telefone" placeholder="Ex: (99) 9999-9999">
+        </mds-input>
+      </div>
+
+      <mds-input type="text" label="Endereço Completo" formControlName="endereco">
+      </mds-input>
+
+      <mds-button type="submit" variant="primary" size="M">
+        <span style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+          <i class="material-icons">save</i>
+          Atualizar
+        </span>
+      </mds-button>
+    </form>
+  </mds-cards>
+
+  <!-- Bloco 2: Preferências Visuais e Acessibilidade -->
+  <section class="config-card">
+    <h2>Preferências de Interface</h2>
+
+    <div class="toggle-group">
+      <label class="switch-label">
+        <span>Modo Escuro (Em breve)</span>
+        <input type="checkbox"> <!-- Exemplo desabilitado -->
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <!-- <div class="form-group">
+      <label for="corDestaque">Cor de Destaque (Alertas de Estoque Alto)</label>
+      <select id="corDestaque" formControlName="corAlta">
+        <option value="azul">Azul Claro (Padrão Otávio)</option>
+        <option value="verde">Verde</option>
+        <option value="amarelo">Amarelo</option>
+      </select>
+      <small class="help-text">Atualmente configurado para Azul Claro para valores altos.</small>
+    </div> -->
+  </section>
+
+  <!-- Feedback Visual (Toast/Alert) -->
+  <div *ngIf="mensagemSucesso" class="alert-success">
+    {{ mensagemSucesso }}
+  </div>
+  <div *ngIf="mensagemErro" class="alert-error">
+    {{ mensagemErro }}
+  </div>
+</div>

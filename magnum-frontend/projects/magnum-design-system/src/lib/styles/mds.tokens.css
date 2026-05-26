@@ -1,0 +1,120 @@
+/* styles/mds.tokens.css */
+
+:root {
+  /* --- NEUTROS (Base da Marca MTC) --- */
+  /* Preto: Usado para textos principais, headers e fundos de destaque */
+  --black-900: #121212;
+  --black-800: #1f1f1f;
+  --black-700: #2c2c2c;
+  --black-600: #3a3a3a;
+  --black-500: #484848;
+  --black-400: #565656;
+  --black-300: #646464;
+  --black-200: #727272;
+  --black-100: #808080;
+  --black-50:  #8e8e8e;
+
+  /* Branco/Cinza Claro: Fundos de tela, cards e inputs */
+  --white-900: #f5f5f5; /* Cinza muito claro para fundo geral */
+  --white-800: #fafafa;
+  --white-700: #ffffff; /* Branco puro para superfícies */
+  --white-600: #ffffff;
+  --white-500: #ffffff;
+  --white-400: #ffffff;
+  --white-300: #ffffff;
+  --white-200: #ffffff;
+  --white-100: #ffffff;
+  --white-50:  #ffffff;
+
+  /* --- COR PRIMÁRIA DA MARCA (Amarelo Visual) --- */
+  /* Amarelo: Sua cor de ação, destaque e identidade visual no sistema */
+  --yellow-900: #b38f00; /* Amarelo escuro para texto sobre amarelo ou bordas */
+  --yellow-800: #c6a300;
+  --yellow-700: #d9b800;
+  --yellow-600: #eccd00;
+  --yellow-500: #ffd700; /* AMARELO PRINCIPAL (Ouro) - Botões e Destaques */
+  --yellow-400: #ffdd33; /* Hover dos botões */
+  --yellow-300: #ffe366;
+  --yellow-200: #ffe999;
+  --yellow-100: #fff0cc;
+  --yellow-50:  #fff7e5; /* Fundo suave para alertas amarelos */
+
+  /* --- CORES FUNCIONAIS (Status de Estoque/Sistema) --- */
+  
+  /* Green / Success (Estoque OK, Sucesso) */
+  --green-900: #1b5e20;
+  --green-800: #2e7d32;
+  --green-700: #388e3c;
+  --green-600: #43a047;
+  --green-500: #4caf50; /* Verde Principal */
+  --green-400: #66bb6a;
+  --green-300: #81c784;
+  --green-200: #a5d6a7;
+  --green-100: #c8e6c9;
+  --green-50:  #e8f5e9;
+
+  /* Red / Danger (Estoque Crítico, Erro) */
+  --red-900: #b71c1c;
+  --red-800: #c62828;
+  --red-700: #d32f2f;
+  --red-600: #e53935;
+  --red-500: #f44336; /* Vermelho Principal */
+  --red-400: #ef5350;
+  --red-300: #e57373;
+  --red-200: #ef9a9a;
+  --red-100: #ffcdd2;
+  --red-50:  #ffebee;
+
+  /* Blue / Info (Informações, Links, Detalhes Técnicos) */
+  --blue-900: #0d47a1;
+  --blue-800: #1565c0;
+  --blue-700: #1976d2;
+  --blue-600: #1e88e5;
+  --blue-500: #2196f3; /* Azul Principal */
+  --blue-400: #42a5f5;
+  --blue-300: #64b5f6;
+  --blue-200: #90caf9;
+  --blue-100: #bbdefb;
+  --blue-50:  #e3f2fd;
+
+  /* Grey / Neutro Secundário (Bordas, Textos secundários) */
+  --grey-900: #212121;
+  --grey-800: #424242;
+  --grey-700: #616161;
+  --grey-600: #757575;
+  --grey-500: #9e9e9e;
+  --grey-400: #bdbdbd;
+  --grey-300: #e0e0e0; /* Bordas padrão */
+  --grey-200: #eeeeee;
+  --grey-100: #f5f5f5;
+  --grey-50:  #fafafa;
+  
+  /* --- BASE ESTRUTURAL (Logotipo MTC) --- */
+  --mds-black: #121212;       /* Preto suave para textos e fundos escuros */
+  --mds-white: #ffffff;       /* Branco para superfícies */
+  --mds-gray-light: #f5f5f5;  /* Fundo geral do sistema (para não cansar a vista) */
+  --mds-gray-border: #e0e0e0; /* Bordas sutis */
+
+  /* --- COR DE DESTAQUE (Sua escolha visual) --- */
+  /* Usei um amarelo "ouro" que é legível e profissional, não muito neon */
+  --mds-accent: #FFD700;      /* Amarelo Ouro (Gold) - Visualmente rico */
+  --mds-accent-hover: #E6C200;/* Amarelo um pouco mais escuro para hover */
+  
+  /* Texto sobre o amarelo DEVE ser preto para contraste (Acessibilidade) */
+  --text-on-accent: #121212;     
+
+  /* --- CORES FUNCIONAIS (Estoque/Lógica) --- */
+  --status-success: #28a745;     /* Verde: Estoque Bom */
+  --status-warning: #FFD700;     /* Amarelo: Alerta Moderado (Pode usar a cor da marca) */
+  --status-danger: #dc3545;      /* Vermelho: Estoque Crítico */
+  --status-info: #2196f3;       /* Azul: Informações adicionais, detalhes técnicos */
+  --status-danger-hover: #c82333; /* Hover para botões de danger */
+  --status-warning-hover: #e6c200; /* Hover para botões de warning */
+  --status-success-hover: #218838; /* Hover para botões de success */
+  --status-info-hover: #1976d2; /* Hover para botões de info */
+  
+  /* --- TIPOGRAFIA E ESPAÇAMENTO --- */
+  --font-family-base: 'Segoe UI', sans-serif;
+  --spacing-md: 16px;
+  --radius-sm: 4px;              /* Cantos levemente arredondados (industrial/moderno) */
+}

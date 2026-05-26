@@ -1,0 +1,33 @@
+<div 
+  class="mds-modal-overlay" 
+  *ngIf="isOpen"
+  (click)="onBackdropClick($event)"
+  (keydown)="onKeyDown($event)"
+  tabindex="-1"
+>
+  <div class="mds-modal-container" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    
+    <!-- Cabeçalho -->
+    <header class="mds-modal-header">
+      <h2 id="modal-title" class="mds-modal-title">{{ title }}</h2>
+      <button 
+        class="mds-modal-close-btn" 
+        (click)="onClose()" 
+        aria-label="Fechar modal"
+      >
+        &times; <!-- Ou use um ícone SVG do seu design system -->
+      </button>
+    </header>
+
+    <!-- Corpo (Conteúdo Projetado) -->
+    <div class="mds-modal-body">
+      <ng-content></ng-content>
+    </div>
+
+    <!-- Rodapé (Opcional, também pode ser ng-content) -->
+    <footer class="mds-modal-footer">
+      <ng-content select="[mds-modal-footer]"></ng-content>
+    </footer>
+
+  </div>
+</div>

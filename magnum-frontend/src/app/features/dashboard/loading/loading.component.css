@@ -1,0 +1,72 @@
+/* HTML: <div class="loader"></div> */
+.centro {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+/* VAMOS USAR SVG DENTRO DO HTML? É a única forma de ficar PERFEITO como na imagem. 
+       Mas se você insiste em CSS, aqui vai o truque final: */
+
+.spinner-wrapper {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    animation: spin 1s linear infinite;
+}
+
+.circle-bg {
+    width: 100%;
+    height: 100%;
+    border: 12px solid #333;
+    border-radius: 50%;
+    box-sizing: border-box;
+}
+
+.white-arc {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 12px solid #fff;
+    border-radius: 50%;
+    border-bottom-color: transparent;
+    border-left-color: transparent;
+    border-right-color: transparent;
+    transform: rotate(45deg);
+    /* Ajusta a posição */
+
+    /* Este método deixa as pontas quadradas. 
+         Para deixar redondas, precisamos de SVG. Desculpe, mas CSS puro tem limitações físicas aqui. */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* HTML: <div class="loader"></div> */
+/* .loader {
+  width: 50px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: 
+    radial-gradient(farthest-side,#f03355 95%,#0000) 50% 1px/12px 12px no-repeat,
+    radial-gradient(farthest-side,#0000 calc(100% - 14px),#ccc 0);
+  animation: l9 2s infinite linear;
+}
+@keyframes l9 {to{transform: rotate(1turn)}} */

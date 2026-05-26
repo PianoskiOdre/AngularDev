@@ -1,0 +1,265 @@
+/* projects/design-system/src/lib/button/button.component.css */
+
+/* Base do botão */
+.mds-btn {
+  font-family: var(--mds-font-base);
+  border: none;
+  border-radius: var(--mds-radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.mds-btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+}
+
+/* --- Tamanhos para Giant, Large, Medium, Small, Tiny --- */
+.mds-btn-G {
+  padding: 16px 24px;
+  font-size: 18px;
+  min-height: 56px;
+}
+
+.mds-btn-L {
+  padding: 14px 20px;
+  font-size: 16px;
+  min-height: 48px;
+}
+
+.mds-btn-M {
+  padding: 12px 16px;
+  font-size: 14px;
+  min-height: 40px;
+}
+
+.mds-btn-S {
+  padding: 8px 12px;
+  font-size: 12px;
+  min-height: 32px;
+}
+
+.mds-btn-T {
+  padding: 6px 8px;
+  font-size: 10px;
+  min-height: 24px;
+}
+
+/* --- VARIANTES DE COR --- */
+.mds-btn-primary {
+  background-color: var(--yellow-500);
+  color: black;
+}
+
+.mds-btn-primary:hover {
+  background-color: var(--yellow-400);
+  color: black;
+}
+
+.mds-btn-outline-primary {
+  color: var(--yellow-500);
+  border: 2px solid var(--yellow-500);
+  border-color: var(--yellow-500);
+  background-color: transparent;
+}
+
+.mds-btn-outline-primary:hover {
+  color: #ffffff;
+  border-color: var(--yellow-500);
+  background: var(--yellow-500);
+}
+
+.mds-btn-secondary {
+  background-color: var(--black-900);
+  color: white;
+}
+
+.mds-btn-secondary:hover {
+  background-color: var(--black-700);
+  color: white;
+}
+
+.mds-btn-outline-secondary {
+  color: var(--black-900);
+  border: 2px solid var(--black-900);
+  border-color: var(--black-900);
+  background-color: transparent;
+}
+
+.mds-btn-outline-secondary:hover {
+  color: #ffffff;
+  border-color: var(--black-900);
+  background: var(--black-900);
+}
+
+.mds-btn-tertiary {
+  background-color: var(--white-700);
+  color: black;
+}
+
+.mds-btn-tertiary:hover {
+  background-color: var(--white-500);
+  color: black;
+}
+
+.mds-btn-outline-tertiary {
+  color: var(--white-700);
+  border: 2px solid var(--white-700);
+  border-color: var(--white-700);
+  background-color: transparent;
+}
+
+.mds-btn-outline-tertiary:hover {
+  color: black;
+  border-color: var(--white-700);
+  background: var(--white-700);
+}
+
+.mds-btn-danger {
+  background-color: var(--status-danger);
+  color: white;
+}
+
+.mds-btn-danger:hover {
+  background-color: var(--status-danger-hover);
+  color: white;
+}
+
+.mds-btn-outline-danger {
+  color: var(--status-danger);
+  border: 2px solid var(--status-danger);
+  border-color: var(--status-danger);
+  background-color: transparent;
+}
+
+.mds-btn-outline-danger:hover {
+  color: white;
+  border-color: var(--status-danger);
+  background: var(--status-danger);
+}
+
+.mds-btn-warning {
+  background-color: var(--status-warning);
+  color: white;
+}
+
+.mds-btn-warning:hover {
+  background-color: var(--status-warning-hover);
+  color: white;
+}
+
+.mds-btn-outline-warning {
+  color: var(--status-warning);
+  border: 2px solid var(--status-warning);
+  border-color: var(--status-warning);
+  background-color: transparent;
+}
+
+.mds-btn-outline-warning:hover {
+  color: white;
+  border-color: var(--status-warning);
+  background: var(--status-warning);
+}
+
+.mds-btn-success {
+  background-color: var(--status-success);
+  color: white;
+}
+
+.mds-btn-success:hover {
+  background-color: var(--status-success-hover);
+  color: white;
+}
+
+.mds-btn-outline-success {
+  color: var(--status-success);
+  border: 2px solid var(--status-success);
+  border-color: var(--status-success);
+  background-color: transparent;
+}
+
+.mds-btn-outline-success:hover {
+  color: white;
+  border-color: var(--status-success);
+  background: var(--status-success);
+}
+
+.mds-btn-info {
+  background-color: var(--status-info);
+  color: white;
+}
+
+.mds-btn-info:hover {
+  background-color: var(--status-info-hover);
+  color: white;
+}
+
+.mds-btn-outline-info {
+  color: var(--status-info);
+  border: 2px solid var(--status-info);
+  border-color: var(--status-info);
+}
+
+.mds-btn-outline-info:hover {
+  color: white;
+  border-color: var(--status-info);
+  background: var(--status-info);
+}
+
+/* --- ESTADOS --- */
+
+/* Hover */
+.mds-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Focus */
+.mds-btn:focus-visible {
+  outline: 2px solid var(--mds-primary);
+  outline-offset: 2px;
+}
+
+/* Press (Active) */
+.mds-btn:active:not(:disabled) {
+  transform: translateY(0);
+  opacity: 0.8;
+}
+
+/* Disabled */
+.mds-btn:disabled,
+.mds-btn-danger:disabled,
+.mds-btn-success:disabled,
+.mds-btn-info:disabled,
+.mds-btn-primary:disabled,
+.mds-btn-secondary:disabled,
+.mds-btn-tertiary:disabled {
+  background-color: var(--grey-300) !important;
+  color: var(--black-50) !important;
+  border-color: var(--grey-300);
+  cursor: not-allowed;
+  opacity: 0.7;
+  transform: none;
+}
+
+/* Garante que variantes desabilitadas tenham cor cinza */
+.mds-btn-outline-primary:disabled,
+.mds-btn-outline-secondary:disabled,
+.mds-btn-outline-tertiary:disabled,
+.mds-btn-outline-danger:disabled,
+.mds-btn-outline-warning:disabled,
+.mds-btn-outline-success:disabled,
+.mds-btn-outline-info:disabled {
+  background-color: transparent !important;
+  color: var(--grey-300) !important;
+  border-color: var(--grey-300);
+}

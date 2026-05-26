@@ -1,0 +1,43 @@
+<header>
+
+    <div class="container">
+        <div class="logo_text">
+            <span>Sistema do Produto - MTC</span>
+        </div>
+
+        <app-navbar></app-navbar>
+
+        <div *ngIf="isLoggedIn" style="display: flex; justify-content: center; align-items: center; gap: 10px">
+
+            <div>
+                <span style="font-weight: normal;">Olá, </span><strong
+                    style="font-weight: bold;">{{ userName }}</strong>
+                <span style="font-weight: normal; color: #ffffff;">
+                    ({{ userRole }})
+                </span>
+            </div>
+
+            <mds-button>
+                <span>
+                    <i class="material-icons">notifications</i>
+                </span>
+            </mds-button>
+
+            <mds-button type="button" variant="outline-secondary" size="S" (click)="abrirModalSair()">
+                <span style="display: flex; justify-content: center; align-items: center; gap: 10px;">
+                    <i class="material-icons" style="font-size: 12px;">exit_to_app</i>
+                    SAIR
+                </span>
+            </mds-button>
+        </div>
+    </div>
+</header>
+
+<mds-modal [isOpen]="modalSairVisivel" title="Sair da conta?" (close)="fecharModalSair()">
+    <p>Tem certeza que deseja encerrar a sessão?</p>
+
+    <div mds-modal-footer>
+        <mds-button variant="outline-secondary" size="S" (click)="fecharModalSair()">Cancelar</mds-button>
+        <mds-button variant="outline-danger" size="S" (click)="logout()">Sair</mds-button>
+    </div>
+</mds-modal>
