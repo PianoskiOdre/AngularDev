@@ -8,6 +8,8 @@ import { ProdutoService } from '../../../core/services/produto.service';
 import { TesteAlertService } from '../../../core/services/teste-alert.service';
 import { RealtimeService } from '../../../core/services/realtime.service';
 import { LoadingComponent } from '../../dashboard/loading/loading.component';
+import { ProductServiceMock } from '../../../shared/services/product.service.mock';
+import { Product } from '../../../shared/models/mock-data';
 
 @Component({
   selector: 'app-produtos',
@@ -70,21 +72,25 @@ export class ProdutosComponent implements OnInit {
   formPronto = false; // ← NOVO FLAG
   currentPage: number = 1;
 
+  stats: Product | null = null;
+  products: Product[] = [];
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private produtoService: ProdutoService,
     private alertService: TesteAlertService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private prodServiceMock: ProductServiceMock
   ) {
     this.produtoForm = this.fb.group({
       id: [null],
-      nome: ['', Validators.required],
-      codigoBarras: ['', Validators.required],
-      categoria: ['', Validators.required],
-      precoCusto: [0, [Validators.required, Validators.min(0.01)]],
-      precoVenda: [0, [Validators.required, Validators.min(0.01)]],
-      estoque: [0, [Validators.required, Validators.min(0)]],
+      name: ['', Validators.required],
+      code_sku: ['', Validators.required],
+      category: ['', Validators.required],
+      price: [0, [Validators.required, Validators.min(0.01)]],
+      sale: [0, [Validators.required, Validators.min(0.01)]],
+      stock: [0, [Validators.required, Validators.min(0)]],
       // estoqueMinimo: [5, [Validators.required, Validators.min(0)]]
     });
   }
@@ -94,10 +100,61 @@ export class ProdutosComponent implements OnInit {
 
     this.formPronto = true;
 
+    this.prodStatsMock();
+
     // this.initForm();
-    this.carregarProdutos();
+    // this.carregarProdutos();
     this.inicializarFormulario();
-    this.carregarDados();
+    // this.carregarDados();
+    this.carregarFakeAPI();
+  }
+
+  prodStatsMock() {
+    this.loading = true;
+    this.prodServiceMock.getProducts().subscribe(data => {
+      this.products = data;
+      console.log("Produto com sucesso!", data);
+      this.loading = false;
+      this.cdr.detectChanges();
+    })
+  }
+
+  carregarFakeAPI() {
+    this.loading = true;
+
+    this.prodServiceMock.getProducts().subscribe({
+      next: (data) => {
+        this.products = data.map(p => ({
+          ...p,
+          category: p.category || ''
+        }));
+
+        // Calcula métricas para exibição na tabela/dashboard
+        this.configuradas = this.products = data.map(p => {
+          const precoCusto = Number(p.price) || 0;
+          const precoVenda = Number(p.sale) || 0;
+          const lucro = precoVenda - precoCusto;
+
+          // Evita divisão por zero
+          const margemSobreVenda = precoVenda > 0 ? (lucro / precoVenda) * 100 : 0;
+
+          return {
+            ...p,
+            price: parseFloat(precoCusto.toFixed(2)),
+            sale: parseFloat(precoVenda.toFixed(2)),
+            lucro: parseFloat(lucro.toFixed(2)),
+            margem: parseFloat(margemSobreVenda.toFixed(2))
+          };
+        });
+
+        this.filtrarLista(); // Aplica filtros iniciais se houver
+        this.loading = false;
+      }, error: (erro) => {
+        console.error('Erro ao carregar produtos:', erro);
+        this.loading = false;
+        // Opcional: mostrar alerta visual de erro para o usuário
+      }
+    });
   }
 
   carregarDados() {
@@ -179,10 +236,10 @@ export class ProdutosComponent implements OnInit {
       return;
     }
     // Exemplo: Chamar um serviço para excluir os produtos
-    this.produtoService.excluirProduto(this.selecionados[0]).subscribe({
+    this.prodServiceMock.deleteProduct(this.selecionados[0]).subscribe({
       next: () => {
         this.fecharModalExcluirSelecionados();
-        this.carregarProdutos();
+        this.carregarFakeAPI();
       },
       error: (err) => {
         console.error('Erro ao excluir produtos:', err);
@@ -191,35 +248,35 @@ export class ProdutosComponent implements OnInit {
     });
   }
 
-  abrirModalExcluir(produto: Produto) {
-    this.produtoExcluir = produto;
+  abrirModalExcluir(produto: Product) {
+    this.stats = produto;
     this.modalExcluirVisivel = true;
   }
 
   fecharModalExcluir() {
     this.modalExcluirVisivel = false;
-    this.produtoExcluir = null;
+    this.stats = null;
   }
 
   confirmarExclusao() {
-    if (!this.produtoExcluir) {
+    if (!this.stats) {
       return;
     }
-    const id = this.produtoExcluir.id;
-    const nome = this.produtoExcluir.nome;
+    const id = this.stats.id;
+    const name = this.stats.name;
 
-    this.onExclusaoProduto(id, nome);
+    this.onExclusaoProduto(id, name);
   }
 
   onExclusaoProduto(id: number, nome: string) {
     this.loading = true;
-    this.produtoService.excluirProduto(id).subscribe({
+    this.prodServiceMock.deleteProduct(id).subscribe({
       next: () => {
-        if (this.produtos) {
-          this.produtos = this.produtos.filter(p => p.id !== id);
+        if (this.products) {
+          this.products = this.products.filter(p => p.id !== id);
         }
 
-        this.carregarProdutos();
+        this.carregarFakeAPI();
 
         this.mostrarErro(`Produto "${nome}" excluído com sucesso!`, 'success');
         this.loading = false;
@@ -375,18 +432,37 @@ export class ProdutosComponent implements OnInit {
     return resultado;
   }
 
+  // buscarPorNome() {
+
+  //   if (!this.termoBusca || this.termoBusca.trim() === '') {
+
+  //     this.carregarTodosOsProdutos();
+  //   } else {
+
+  //     // --- CASO 2: HÁ UM TERMO DE BUSCA -> FILTRA POR NOME ---
+  //     this.produtoService.buscarPorNome(this.termoBusca).subscribe({
+  //       next: (data: Produto[]) => {
+  //         // Simula um delay para você ver o loading (pode remover o setTimeout depois)
+  //         this.produtos = data; // Atualiza a lista na tela com o resultado filtrado
+  //       },
+  //       error: (err: any) => {
+  //         console.error('Erro ao buscar produtos', err);
+  //         this.mostrarErro('Falha ao buscar produtos.', 'danger');
+  //       }
+  //     });
+  //   }
+  // }
+
   buscarPorNome() {
-
     if (!this.termoBusca || this.termoBusca.trim() === '') {
-
       this.carregarTodosOsProdutos();
     } else {
 
       // --- CASO 2: HÁ UM TERMO DE BUSCA -> FILTRA POR NOME ---
-      this.produtoService.buscarPorNome(this.termoBusca).subscribe({
-        next: (data: Produto[]) => {
+      this.prodServiceMock.buscarPorNome(this.termoBusca).subscribe({
+        next: (data: Product[]) => {
           // Simula um delay para você ver o loading (pode remover o setTimeout depois)
-          this.produtos = data; // Atualiza a lista na tela com o resultado filtrado
+          this.products = data; // Atualiza a lista na tela com o resultado filtrado
         },
         error: (err: any) => {
           console.error('Erro ao buscar produtos', err);
@@ -398,22 +474,36 @@ export class ProdutosComponent implements OnInit {
 
   filtrarLista() {
     if (!this.filtroTexto) {
-      this.configuradas = this.produtos;
+      this.configuradas = this.products;
     } else {
       const termo = this.filtroTexto.toLowerCase();
-      this.configuradas = this.produtos.filter(p =>
-        p.nome.toLowerCase().includes(termo) ||
-        p.codigoBarras.toLowerCase().includes(termo)
+      this.configuradas = this.products.filter(p =>
+        p.name.toLowerCase().includes(termo) ||
+        p.code_sku.toLowerCase().includes(termo)
       );
     }
   }
 
   // Função auxiliar para carregar todos os produtos
+  // carregarTodosOsProdutos() {
+  //   this.produtoService.getProdutos().subscribe({ // Assumindo que você tem um método .listar()
+  //     next: (data: Produto[]) => {
+  //       setTimeout(() => {
+  //         this.produtos = data;
+  //       }, 1000);
+  //     },
+  //     error: (err: any) => {
+  //       console.error('Erro ao carregar produtos', err);
+  //       this.mostrarErro('Falha ao carregar a lista de produtos.', 'danger');
+  //     }
+  //   });
+  // }
+
   carregarTodosOsProdutos() {
-    this.produtoService.getProdutos().subscribe({ // Assumindo que você tem um método .listar()
-      next: (data: Produto[]) => {
+    this.prodServiceMock.getProducts().subscribe({ // Assumindo que você tem um método .listar()
+      next: (data: Product[]) => {
         setTimeout(() => {
-          this.produtos = data;
+          this.products = data;
         }, 1000);
       },
       error: (err: any) => {
@@ -443,7 +533,7 @@ export class ProdutosComponent implements OnInit {
     this.produtoForm.patchValue({
       id: produto.id,
       nome: produto.nome,
-      categoria: produto.categoria?.toLowerCase() || '',
+      categoria: produto.categoria || '',
       precoCusto: produto.precoCusto,
       precoVenda: produto.precoVenda,
       estoque: produto.estoque,
@@ -483,65 +573,58 @@ export class ProdutosComponent implements OnInit {
     console.log('Dados do Form:', formValue);
 
     // 1. Validação Rápida
-    const nome = formValue.nome?.toString().trim();
-    const codigoBarras = formValue.codigoBarras?.toString().trim();
+    const name = formValue.name?.toString().trim() || ''; // Mantém case original ou ajuste conforme necessidade
+    const codeSku = formValue.code_sku?.toString().trim() || '';
 
-    if (!nome) {
+    if (!name) {
       this.mostrarErro('Nome obrigatório.', 'danger');
       return;
     }
 
-    // 2. Montagem do Payload
+    // 2. Montagem do Payload (Objeto Completo)
     const payload = {
-      id: formValue.id,
-      nome: nome,
-      categoria: formValue.categoria?.toString().trim().toLowerCase(),
-      estoque: Number(formValue.estoque) || 0,
-      precoCusto: parseFloat((formValue.precoCusto + '').replace(',', '.')) || 0,
-      precoVenda: parseFloat((formValue.precoVenda + '').replace(',', '.')) || 0,
-      codigoBarras: codigoBarras,
+      id: formValue.id, // Pode ser null se for novo
+      name: name,
+      category: formValue.category?.toString().trim() || '',
+      stock: Number(formValue.stock) || 0,
+      price: parseFloat((formValue.price + '').replace(',', '.')) || 0,
+      sale: parseFloat((formValue.sale + '').replace(',', '.')) || 0,
+      code_sku: codeSku,
       ativo: true
     };
 
     console.log('Payload Enviado:', payload);
-    console.log('Lista Atual de Produtos (antes da salvar):', this.produtos);
-
-    // 3. Verificação de Duplicidade Local (Apenas para UX rápida)
-    // Nota: A validação real deve ser feita no Backend (.NET)
-    const duplicadoLocal = this.produtos.find(p =>
-      p.id !== payload.id &&
-      p.nome.toLowerCase() === payload.nome.toLowerCase()
-    );
-
-    if (duplicadoLocal) {
-      console.warn('Duplicidade detectada localmente');
-      this.mostrarErro('Já existe um produto com este nome.', 'warning');
-      return;
-    }
 
     this.loading = true;
 
-    // 4. Chamada API
+    // 3. Chamada API CORRETA: Passe o OBJETO (payload), não apenas o ID
     const request$ = this.modoEdicao
-      ? this.produtoService.atualizarProduto(payload.id, payload)
-      : this.produtoService.adicionarProduto(payload);
+      ? this.prodServiceMock.updateProduct(payload) // ✅ Correto: Passa o objeto
+      : this.prodServiceMock.addProduct(payload);   // ✅ Correto: Passa o objeto
 
     request$.subscribe({
       next: (resposta) => {
-        console.log('Resposta do Backend:', resposta); // DEBUG: Olhe isso no console!
+        console.log('Resposta do Backend/Mock:', resposta);
 
         this.mostrarErro(
           this.modoEdicao ? 'Atualizado com sucesso!' : 'Cadastrado com sucesso!',
           'success'
         );
 
-        const index = this.produtos.findIndex(p => p.id === payload.id);
-        if (index !== -1) {
-          this.produtos[index] = payload;
+        // Opcional: Atualização otimista na lista local
+        // Se for edição, atualiza o item existente. Se for criação, adiciona ao final.
+        if (this.modoEdicao) {
+          const index = this.products.findIndex(p => p.id === resposta.id);
+          if (index !== -1) {
+            this.products[index] = resposta;
+          }
+        } else {
+          // Adiciona o novo produto retornado pela API (que já tem o ID gerado)
+          this.products.push(resposta);
         }
 
-        // IMPORTANTE: Recarrega a lista do servidor para garantir dados frescos
-        this.carregarProdutos();
+        // Recarrega a lista para garantir consistência (especialmente com Mock/LocalStorage)
+        this.carregarFakeAPI();
 
         this.limparForm();
         this.loading = false;
@@ -550,12 +633,11 @@ export class ProdutosComponent implements OnInit {
         console.error('Erro da API:', err);
         this.loading = false;
 
-        // Tratamento específico para erro 409 (Conflito/Duplicado no Backend)
-        if (err.status === 409 || err.error?.message?.includes('já existe')) {
-          this.mostrarErro('Este produto já está cadastrado no sistema.', 'warning');
-        } else {
-          this.mostrarErro(err.error?.message || 'Erro ao salvar.', 'danger');
-        }
+        // Tratamento de erro
+        let msg = 'Erro ao salvar.';
+        if (err.message) msg = err.message; // Mock costuma retornar mensagem direta
+
+        this.mostrarErro(msg, 'danger');
       }
     });
   }
@@ -563,22 +645,22 @@ export class ProdutosComponent implements OnInit {
   // Função auxiliar para validar (mantém seu código limpo)
   private validarCampos(formValue: any): string[] {
     const erros: string[] = [];
-    const nome = formValue.nome?.toString().trim();
+    const name = formValue.name?.toString().trim().toLowerCase() || '';
 
-    if (!nome) erros.push('Nome é obrigatório.');
-    else if (!/^[a-zA-ZÀ-ÿ\s.\-0-9]+$/.test(nome)) erros.push('Nome contém caracteres inválidos.');
+    if (!name) erros.push('Nome é obrigatório.');
+    else if (!/^[a-zA-ZÀ-ÿ\s.\-0-9]+$/.test(name)) erros.push('Nome contém caracteres inválidos.');
 
-    const categoria = formValue.categoria?.toString().trim().toLowerCase();
+    const categoria = formValue.categoria?.toString().trim().toLowerCase() || '';
     if (!categoria || categoria === 'selecione') erros.push('Categoria inválida.');
 
-    const estoque = Number(formValue.estoque) || 0;
-    if (estoque < 0) erros.push('Estoque negativo.');
+    const stock = Number(formValue.stock) || 0;
+    if (stock < 0) erros.push('Estoque negativo.');
 
-    const precoCusto = parseFloat((formValue.precoCusto + '').replace(',', '.')) || 0;
-    const precoVenda = parseFloat((formValue.precoVenda + '').replace(',', '.')) || 0;
+    const price = parseFloat((formValue.price + '').replace(',', '.')) || 0;
+    const sale = parseFloat((formValue.sale + '').replace(',', '.')) || 0;
 
-    if (precoCusto <= 0) erros.push('Preço Custo inválido.');
-    if (precoVenda <= 0) erros.push('Preço Venda inválido.');
+    if (price <= 0) erros.push('Preço Custo inválido.');
+    if (sale <= 0) erros.push('Preço Venda inválido.');
 
     return erros;
   }
@@ -587,12 +669,12 @@ export class ProdutosComponent implements OnInit {
   private montarPayload(formValue: any): any {
     return {
       id: formValue.id,
-      nome: formValue.nome?.toString().trim(),
-      categoria: formValue.categoria?.toString().trim().toLowerCase(),
-      estoque: Number(formValue.estoque) || 0,
-      precoCusto: parseFloat((formValue.precoCusto + '').replace(',', '.')) || 0,
-      precoVenda: parseFloat((formValue.precoVenda + '').replace(',', '.')) || 0,
-      codigoBarras: formValue.codigoBarras?.toString().trim(),
+      name: formValue.name?.toString().trim(),
+      category: formValue.category?.toString().trim().toLowerCase() || '',
+      stock: Number(formValue.stock) || 0,
+      price: parseFloat((formValue.price + '').replace(',', '.')) || 0,
+      sale: parseFloat((formValue.sale + '').replace(',', '.')) || 0,
+      code_sku: formValue.code_sku?.toString().trim(),
       ativo: true
     };
   }
@@ -601,8 +683,8 @@ export class ProdutosComponent implements OnInit {
     this.modoEdicao = false;
     this.produtoSelecionado = null;
     this.produtoForm.reset({
-      id: null, nome: '', codigoBarras: '', categoria: '',
-      precoCusto: 0, precoVenda: 0, estoque: 0
+      id: null, name: '', ccode_sku: '', category: '',
+      price: 0, sale: 0, stock: 0
     });
   }
 
@@ -655,20 +737,20 @@ export class ProdutosComponent implements OnInit {
   inicializarFormulario() {
     this.produtoForm = this.fb.group({
       id: [null],
-      nome: ['', [Validators.required]],
-      categoria: ['', [Validators.required]],
-      estoque: [0, [Validators.min(0)]],
-      precoCusto: [0, [Validators.min(0.01)]],
-      precoVenda: [0, [Validators.min(0.01)]],
-      codigoBarras: ['', [Validators.required]]
+      name: ['', [Validators.required]],
+      category: ['', [Validators.required]],
+      stock: [0, [Validators.min(0)]],
+      price: [0, [Validators.min(0.01)]],
+      sale: [0, [Validators.min(0.01)]],
+      code_sku: ['', [Validators.required]]
     });
 
     // INSCREVA-SE NAS MUDANÇAS DO PREÇO DE CUSTO
-    this.produtoForm.get('precoCusto')?.valueChanges.subscribe(custo => {
+    this.produtoForm.get('price')?.valueChanges.subscribe(custo => {
       console.log('Valor de custo mudou para:', custo); // Debug
 
       // 👇 ESCUTA MUDANÇAS NO PREÇO DE CUSTO E ATUALIZA O PREÇO DE VENDA AUTOMATICAMENTE
-      this.produtoForm.get('precoCusto')?.valueChanges.subscribe(custo => {
+      this.produtoForm.get('price')?.valueChanges.subscribe(custo => {
         if (custo && custo > 0) {
           const vendaCalculada = custo * 1.667;
           const vendaFormatada = parseFloat(vendaCalculada.toFixed(2));
@@ -676,11 +758,11 @@ export class ProdutosComponent implements OnInit {
           console.log(`Custo: ${custo} → Venda calculada: ${vendaFormatada}`);
 
           this.produtoForm.patchValue({
-            precoVenda: vendaFormatada
+            sale: vendaFormatada
           }, { emitEvent: false }); // Evita loop infinito
         } else {
           this.produtoForm.patchValue({
-            precoVenda: null
+            sale: null
           }, { emitEvent: false });
         }
       });
@@ -698,28 +780,39 @@ export class ProdutosComponent implements OnInit {
     return this.produtos.filter(p => p.categoria === filtro);
   }
 
+  // Fake API é situação.
+  get prodStatsFake() {
+    const filtro = String(this.categoriaFiltro || '').trim();
+
+    if (!filtro || filtro === 'Todas') {
+      return this.products;
+    }
+
+    return this.products.filter(p => p.category === filtro);
+  }
+
   // Getters para acessar os controles facilmente no template
   get nomeControl(): AbstractControl | null {
-    return this.produtoForm.get('nome');
+    return this.produtoForm.get('name');
   }
 
   get categoriaControl(): AbstractControl | null {
-    return this.produtoForm.get('categoria');
+    return this.produtoForm.get('category');
   }
 
   get estoqueControl(): AbstractControl | null {
-    return this.produtoForm.get('estoque');
+    return this.produtoForm.get('stock');
   }
 
   get precoCustoControl(): AbstractControl | null {
-    return this.produtoForm.get('precoCusto');
+    return this.produtoForm.get('price');
   }
 
   get precoVendaControl(): AbstractControl | null {
-    return this.produtoForm.get('precoVenda');
+    return this.produtoForm.get('sale');
   }
 
   get codigoBarrasControl(): AbstractControl | null {
-    return this.produtoForm.get('codigoBarras');
+    return this.produtoForm.get('code_sku');
   }
 }

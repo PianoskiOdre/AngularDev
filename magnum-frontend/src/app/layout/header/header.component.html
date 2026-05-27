@@ -1,13 +1,31 @@
-<header>
+<header class="main-header">
 
-    <div class="container">
+    <div class="container header-container">
+
+        <!-- Logo -->
         <div class="logo_text">
             <span>Sistema do Produto - MTC</span>
         </div>
 
-        <app-navbar></app-navbar>
+        <!-- Navbar -->
+        <app-navbar class="nav-menu"></app-navbar>
 
-        <div *ngIf="isLoggedIn" style="display: flex; justify-content: center; align-items: center; gap: 10px">
+        <!-- Área do Usuário e Ações -->
+        <div class="user-actions">
+            <div class="user-info">
+                <i class="material-icons user-icon">person</i>
+                <div class="user-text">
+                    <p>Olá, <strong>Usuário!</strong></p>
+                    <p class="user-role">(User)</p>
+                </div>
+            </div>
+
+            <mds-button variant="primary" size="S" class="notification-btn">
+                <i class="material-icons">notifications</i>
+            </mds-button>
+        </div>
+
+        <!-- <div *ngIf="isLoggedIn" style="display: flex; justify-content: center; align-items: center; gap: 10px">
 
             <div>
                 <span style="font-weight: normal;">Olá, </span><strong
@@ -29,15 +47,15 @@
                     SAIR
                 </span>
             </mds-button>
-        </div>
+        </div> -->
     </div>
 </header>
 
-<mds-modal [isOpen]="modalSairVisivel" title="Sair da conta?" (close)="fecharModalSair()">
+<!-- <mds-modal [isOpen]="modalSairVisivel" title="Sair da conta?" (close)="fecharModalSair()">
     <p>Tem certeza que deseja encerrar a sessão?</p>
 
     <div mds-modal-footer>
         <mds-button variant="outline-secondary" size="S" (click)="fecharModalSair()">Cancelar</mds-button>
         <mds-button variant="outline-danger" size="S" (click)="logout()">Sair</mds-button>
     </div>
-</mds-modal>
+</mds-modal> -->

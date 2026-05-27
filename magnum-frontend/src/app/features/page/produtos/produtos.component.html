@@ -27,21 +27,21 @@
       </div>
 
       <ul class="produto-list">
-        <li *ngFor="let prod of produtosFiltrados" (click)="selecionarProduto(prod)"
+        <li *ngFor="let prod of prodStatsFake" (click)="selecionarProduto(prod)"
           [class.active]="prod.id === produtoSelecionado?.id">
           <div class="prod-info">
             <span
               style="display: flex; justify-content: flex-start; align-items: center; gap: 10px; font-weight: bold;">
               <i class="material-icons">inventory_2</i>
-              {{ prod.nome }}
+              {{ prod.name }}
             </span>
             <span>
               <label>Categoria: </label>
-              {{ prod.categoria }}
+              {{ prod.category }}
             </span>
             <span class="prod-codigo">
               <label>Código/SKU: </label>
-              {{ prod.codigoBarras }}
+              {{ prod.code_sku }}
             </span>
           </div>
           <!-- <div class="prod-estoque" [class.estoque-baixo]="prod.quantidade <= prod.estoqueMinimo">
@@ -49,7 +49,7 @@
           </div> -->
         </li>
       </ul>
-      <div *ngIf="produtosFiltrados.length === 0"
+      <div *ngIf="prodStatsFake.length === 0"
         style="text-align: center; padding: 40px; color: #888; background: #fff;">
         Nenhuma produtos encontrada.
       </div>
@@ -68,23 +68,23 @@
           <legend style="color: #000;">Dados Principais</legend>
           <div class="form-row">
             <div class="form-group full">
-              <mds-input label="Nome do Produto" type="text" formControlName="nome"
+              <mds-input label="Nome do Produto" type="text" formControlName="name"
                 placeholder="Ex: Tubo PVC 100mm"></mds-input>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <mds-input label="Código / SKU" formControlName="codigoBarras" placeholder="Ex: TUB-100"></mds-input>
+              <mds-input label="Código / SKU" formControlName="code_sku" placeholder="Ex: TUB-100"></mds-input>
             </div>
             <div class="form-group">
               <mds-select
                 label="Categoria"
-                formControlName="categoria"
+                formControlName="category"
                 [options]="categorias"
                 [required]="true"
-                [value]="produtoForm.get('categoria')?.value"
-                [class.is-invalid]="produtoForm.get('categoria')?.invalid && produtoForm.get('categoria')?.touched"
+                [value]="produtoForm.get('category')?.value"
+                [class.is-invalid]="produtoForm.get('category')?.invalid && produtoForm.get('category')?.touched"
               ></mds-select>
             </div>
           </div>
@@ -95,18 +95,18 @@
           <legend style="color: #000;">Preços e Estoque</legend>
           <div class="form-row">
             <div class="form-group">
-              <mds-input label="Preço de Custo (R$)" type="number" formControlName="precoCusto" min="0.01" step="0.01"></mds-input>
+              <mds-input label="Preço de Custo (R$)" type="number" formControlName="price" min="0.01" step="0.01"></mds-input>
             </div>
             <div class="form-group">
-              <mds-input label="Preço de Venda (R$)" type="number" formControlName="precoVenda" min="0.01" step="0.01"
-                [class.is-invalid]="produtoForm.get('precoCusto')?.invalid && produtoForm.get('precoCusto')?.touched"
+              <mds-input label="Preço de Venda (R$)" type="number" formControlName="sale" min="0.01" step="0.01"
+                [class.is-invalid]="produtoForm.get('sale')?.invalid && produtoForm.get('sale')?.touched"
               ></mds-input>
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <mds-input type="number" step="0" min="0" label="Estoque Atual" formControlName="estoque"></mds-input>
+              <mds-input type="number" step="0" min="0" label="Estoque Atual" formControlName="stock"></mds-input>
             </div>
             <div class="form-group">
               <mds-input label="Estoque Mínimo (Alerta)" type="number"></mds-input>
@@ -155,17 +155,17 @@
           <th>Codigo/SKU</th>
           <th>Estoque</th>
           <th>P. Custo (R$)</th>
-          <th *ngIf="isAdmin">P. Venda (R$)</th>
-          <th *ngIf="isAdmin">P. Lucro (R$)</th>
-          <th *ngIf="isAdmin">Margem (%)</th>
+          <th>P. Venda (R$)</th>
+          <th>P. Lucro (R$)</th>
+          <th>Margem (%)</th>
           <th>Ações</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let p of produtosFiltrados">
+        <tr *ngFor="let p of prodStatsFake">
           <td>
             <span class="icon-checkbox" role="checkbox" [attr.aria-checked]="selecionados.includes(p.id)" tabindex="0"
-              (click)="toggleSelecao(p.id)" [attr.aria-label]="'Selecionar ' + p.nome">
+              (click)="toggleSelecao(p.id)" [attr.aria-label]="'Selecionar ' + p.name">
 
               <i class="material-icons">{{ selecionados.includes(p.id) ? 'check_box' :
                 'check_box_outline_blank' }}</i>
@@ -174,40 +174,39 @@
           <td>
             <a style="display: flex; justify-content: center; align-items: center;">{{ p.id }}</a>
           </td>
-          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.nome }}</a></td>
-          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.categoria || 'Sem categoria'
-              }}</a></td>
-          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.codigoBarras }}</a></td>
+          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.name }}</a></td>
+          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.category || 'Sem categoria' }}</a></td>
+          <td><a style="display: flex; justify-content: center; align-items: center;">{{ p.code_sku }}</a></td>
           <td>
             <div style="display: flex; justify-content: center; align-items: center; gap: 8px;">
               <div style="display: flex; justify-content: center; align-items: center; gap: 8px; cursor: pointer;">
                 <div style="display: flex; justify-content: center; align-items: center;">
-                  <span>{{ p.estoque }}</span>
+                  <span>{{ p.stock }}</span>
                 </div>
                 <div style="display: flex; justify-content: center; align-items: center;">
-                  <mds-tooltip [text]="getEstoqueStatus(p.estoque).tooltip"
-                    [style.color]="getEstoqueStatus(p.estoque).color" [position]="'bottom'">
+                  <mds-tooltip [text]="getEstoqueStatus(p.stock).tooltip"
+                    [style.color]="getEstoqueStatus(p.stock).color" [position]="'bottom'">
                     <i class="material-icons" style="font-size: 20px; vertical-align: middle;">{{
-                      getEstoqueStatus(p.estoque).icon }}</i>
+                      getEstoqueStatus(p.stock).icon }}</i>
                   </mds-tooltip>
                 </div>
               </div>
             </div>
           </td>
           <!-- Preço Custo -->
-          <td>{{ (p.precoCusto || 0) | currency }}</td>
+          <td>{{ (p.price || 0) | currency }}</td>
 
           <!-- Preço Venda -->
-          <td *ngIf="isAdmin">{{ (p.precoVenda || 0) | currency }}</td>
+          <td>{{ (p.sale || 0) | currency }}</td>
 
           <!-- Lucro -->
-          <td *ngIf="isAdmin">{{ ((p.precoVenda || 0) - (p.precoCusto || 0)) | currency }}</td>
+          <td>{{ ((p.sale || 0) - (p.price || 0)) | currency }}</td>
 
           <!-- Margem % -->
-          <td *ngIf="isAdmin" style="font-weight: bold;"
-            [style.color]="isMargemNegativa(p.precoVenda, p.precoCusto) ? '#dc3545' : isMargemBaixa(p.precoVenda, p.precoCusto) ? '#ffc107' : '#28a745'">
+          <td style="font-weight: bold;"
+            [style.color]="isMargemNegativa(p.sale, p.price) ? '#dc3545' : isMargemBaixa(p.sale, p.price) ? '#ffc107' : '#28a745'">
 
-            {{ calcularMargem(p.precoVenda, p.precoCusto) }}%
+            {{ calcularMargem(p.sale, p.price) }}%
           </td>
           <td>
             <mds-button variant="danger" size="S" (click)="abrirModalExcluir(p)" >
@@ -220,7 +219,7 @@
         </tr>
       </tbody>
     </table>
-    <div *ngIf="produtosFiltrados.length === 0"
+    <div *ngIf="prodStatsFake.length === 0"
       style="text-align: center; padding: 40px; color: #888; background: #fff;">
       Nenhuma produtos encontrada.
     </div>
@@ -280,7 +279,7 @@
 </mds-modal>
 
 <mds-modal [isOpen]="modalExcluirVisivel" title="Confirmar Exclusão" (close)="fecharModalExcluir()">
-  <p>Tem certeza que deseja excluir o produto <strong>{{ produtoExcluir?.nome }}</strong>?</p>
+  <p>Tem certeza que deseja excluir o produto <strong>{{ stats?.name }}</strong>?</p>
   <p>Esta ação não pode ser desfita.</p>
 
   <div mds-modal-footer>

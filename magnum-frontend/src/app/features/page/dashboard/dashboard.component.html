@@ -1,47 +1,45 @@
 <app-loading *ngIf="loading"></app-loading>
-<div *ngIf="resumo" style="padding: 20px; font-family: Arial, sans-serif;">
+<div *ngIf="stats" style="padding: 20px; font-family: Arial, sans-serif;">
 
     <div class="grid-cards" [style.grid-template-columns]="gridColumns">
 
-        <mds-card title="Total Produtos" subtitle="Itens ativos" [value]="resumo.totalProduto" iconClass="icon-blue"
+        <mds-card title="Total Produtos" subtitle="Itens ativos" [value]="stats.totalProducts" iconClass="icon-blue"
             iconName="cube"></mds-card>
 
-        <mds-card title="Valor do Estoque" subtitle="Em estoque" [value]="resumo.valorTotalEstoque | currency:'BRL'"
+        <mds-card title="Valor do Estoque" subtitle="Em estoque" [value]="stats.stockValue | currency:'BRL'"
             iconClass="icon-emerald" iconName="estoque"></mds-card>
 
-        <mds-card *ngIf="isAdmin" title="Lucro Total" subtitle="Realizado"
-            [value]="resumo.lucroTotalEstoque | currency:'BRL'" iconClass="icon-green" iconName="chartBar"></mds-card>
+        <mds-card title="Lucro Total" subtitle="Realizado" [value]="stats.totalProfit | currency:'BRL'"
+            iconClass="icon-green" iconName="chartBar"></mds-card>
 
-        <mds-card *ngIf="isAdmin" title="Margem Média" subtitle="De lucro"
-            [value]="resumo.margemMediaPercentual | percentage" iconClass="icon-orange" iconName="percent"></mds-card>
+        <mds-card title="Margem Média" subtitle="De lucro" [value]="stats.averageMargin | percentage"
+            iconClass="icon-orange" iconName="percent"></mds-card>
 
     </div>
 
     <!-- ALERTA DE ESTOQUE -->
     <app-stock-alert></app-stock-alert>
 
-    <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 10px;">
+    <div style="display: flex; justify-content: flex-end; align-items: center; margin-bottom: 20px;">
         <span style="color: #666; display: flex; align-items: center; gap: 5px;">
             <i class="material-icons" style="font-size: 18px; vertical-align: middle;">update</i>
             Última Atualização: {{ dataHoraAtualizacao }}
         </span>
     </div>
 
+    <div class="container-cards">
+        <div *ngIf="!loadingChart" class="grid_card">
+            <mds-cards class="chart-wrapper">
+                <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [type]="pieChartType"
+                    [options]="pieChartOptions" [colors]="pieChartColors" [legend]="true">
+                </canvas>
+            </mds-cards>
 
-    <div class="graficos-container">
-        <div *ngIf="!loadingChart">
-            <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
-                <div class="grafico-card" style="margin-bottom: 15px; width: 700px;">
-                    <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [type]="pieChartType"
-                        [options]="pieChartOptions" [colors]="pieChartColors" [legend]="true">
-                    </canvas>
-                </div>
-                <div class="grafico-card" style="margin-bottom: 15px;">
-                    <canvas baseChart [data]="barChartData" [labels]="barChartLabels" [type]="barChartType"
-                        [options]="barChartOptions" [legend]="false">
-                    </canvas>
-                </div>
-            </div>
+            <mds-cards class="chart-wrapper">
+                <canvas baseChart [data]="barChartData" [labels]="barChartLabels" [type]="barChartType"
+                    [options]="barChartOptions" [legend]="false">
+                </canvas>
+            </mds-cards>
         </div>
     </div>
 

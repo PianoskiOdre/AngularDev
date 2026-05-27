@@ -1,4 +1,4 @@
-<div *ngIf="resumo" class="stock-alert-wrapper">
+<div *ngIf="stats" class="stock-alert-wrapper">
 
     <!-- CASO CRÍTICO: Estoque Zero/Baixo -->
     <div *ngIf="hasStockAlert" class="alert-box alert-critical">
@@ -15,7 +15,7 @@
                 Atenção: Estoque Baixo
             </p>
             <p class="alert-message">
-                Existem <strong>{{ resumo.semEstoque }}</strong> produto(s) com quantidade zero.
+                Existem <strong>{{ stats.lowStockAlerts.length }}</strong> produto(s) com quantidade zero.
                 <!-- Usa routerLink para navegação SPA sem recarregar -->
                 <a [routerLink]="['/produtos']" [queryParams]="{ filter: 'out-of-stock' }" class="alert-link">
                     Ver produtos
@@ -25,7 +25,7 @@
     </div>
 
     <!-- CASO SUCESSO: Tudo OK -->
-    <div *ngIf="!hasStockAlert && resumo" class="alert-box alert-success">
+    <div *ngIf="!hasStockAlert && stats" class="alert-box alert-success">
         <div class="alert-icon-container">
             <!-- Ícone de Sucesso (SVG) -->
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="icon-success">

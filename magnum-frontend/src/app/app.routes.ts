@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { LoginComponent } from './features/auth/login/login.component';
-import { DashboardComponent } from './features/dashboard/dashboard.component';
+import { DashboardComponent } from './features/page/dashboard/dashboard.component';
 import { AuthGuard } from './core/guards/auth.guard';
 import { StockAlertComponent } from './features/dashboard/stock-alert/stock-alert.component';
 import { LayoutComponent } from './layout/layout.component';

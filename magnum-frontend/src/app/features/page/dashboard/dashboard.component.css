@@ -59,12 +59,12 @@
   font-size: 13px;
 }
 
-.graficos-container {
+/* .graficos-container {
   position: relative;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-}
+} */
 
 .loading-wrapper {
   position: absolute;
@@ -100,11 +100,9 @@
 
 .grafico-card {
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 350px;
-  width: 100%;
 }
 
 canvas {
@@ -529,19 +527,45 @@ canvas {
   }
 }
 
+/* .container-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+} */
+
 .grid-cards {
   display: grid;
   gap: 20px;
   margin-bottom: 1.5rem;
 }
 
-.grid-cards-user {
+.grid_card {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.chart-wrapper {
+  width: 100%;
+  height: 350px;
+  min-width: 0; /* Evita que o canvas force a largura para fora do grid */
+  display: block;
+}
+
+@media (max-width: 1200px) {
+  .grid_card {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* .grid-cards-user {
   grid-template-columns: repeat(3, auto);
 }
 
 .grid-cards-admin {
   grid-template-columns: repeat(4, auto);
-}
+} */
 
 @media (max-width: 1200px) {
   .grid-cards {
@@ -550,6 +574,14 @@ canvas {
     row-gap: 20px;
   }
 }
+
+/* @media (max-width: 1200px) {
+  .grid-cards {
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+  }
+} */
 
 .icon-checkbox-black {
   cursor: pointer;

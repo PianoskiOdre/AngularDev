@@ -7,6 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
+    "predeploy": "if exist dist\\magnum-frontend\\browser (move dist\\magnum-frontend\\browser\\* dist\\magnum-frontend\\ && rmdir /s /q dist\\magnum-frontend\\browser)",
     "deploy": "ng build && npx ngh --dir=dist/magnum-frontend"
   },
   "prettier": {

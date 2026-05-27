@@ -4,22 +4,22 @@
     <mds-cards>
       <h1>Filtros de Movimentação</h1>
 
-      <form [formGroup]="filtroForm" (ngSubmit)="buscarRelatorio()">
-        <div style="display: flex; justify-content: space-around; align-items: center; gap: 10px; overflow-x: auto;">
+      <form [formGroup]="filtroForm" (ngSubmit)="buscarFakeApiRelatorio()">
+        <div style="display: flex; justify-content: flex-start; align-items: center; gap: 10px; overflow-x: auto;">
 
           <label>Data Início: </label>
-          <mds-input type="date" id="dataInicio" formControlName="dataInicio"></mds-input>
+          <mds-input type="date" id="startDate" formControlName="startDate"></mds-input>
 
           <span>Até</span>
 
           <label>Data Fim: </label>
-          <mds-input type="date" id="dataFim" formControlName="dataFim"></mds-input>
+          <mds-input type="date" id="endDate" formControlName="endDate"></mds-input>
 
-          <mds-select id="tipoMovimento" formControlName="tipoMovimento" [options]="tipoMovimentos"></mds-select>
+          <mds-select id="type" formControlName="type" [options]="tipoMovimentos"></mds-select>
 
           <label>Produto (Opcional): </label>
 
-          <mds-select id="produtoId" formControlName="produtoId" [options]="produtosOptions"></mds-select>
+          <mds-select id="productId" formControlName="productId" [options]="produtosOptions"></mds-select>
 
           <!-- <mds-button variant="primary" size="S" (click)="buscarRelatorio()">
           <span style="display: flex; justify-content: space-around; align-items: center; gap: 10px;">
@@ -34,19 +34,21 @@
             </span>
           </mds-button>
 
-          <mds-button variant="neutral" size="S" (click)="limparFiltros()"><span>
+        </div>
+      </form>
+
+      <div style="display: flex; justify-content: flex-end; align-items: center; gap: 10px; margin-top: 20px;">
+        <mds-button variant="neutral" size="S" (click)="onLimparFiltros()"><span>
               Limpar
             </span></mds-button>
 
-          <mds-button variant="danger" size="S" (click)="exportarParaPDF()" [disabled]="movimentos.length === 0">
+          <mds-button variant="danger" size="S" (click)="baixarPDF()" [disabled]="movements.length === 0">
             <span style="display: flex; justify-content: center; align-items: center; gap: 10px;">
               <i class="material-icons" style="font-size: 15px;">picture_as_pdf</i>
               Baixar PDF
             </span>
           </mds-button>
-
-        </div>
-      </form>
+      </div>
     </mds-cards>
   </div>
 
@@ -67,31 +69,31 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let mov of movimentos">
-          <td>{{ mov.dataMovimento | date:'dd/MM/yyyy HH:mm' }}</td>
-          <td>{{ mov.produtoNome }}</td>
-          <td>{{ mov.categoriaNome }}</td>
+        <tr *ngFor="let mov of movements">
+          <td>{{ mov.date | date:'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ mov.productName }}</td>
+          <td>{{ mov.category }}</td>
           <td>
-            <span [class.entrada]="mov.tipoMovimento === 'Entrada'" [class.saida]="mov.tipoMovimento === 'Saída'">
-              {{ mov.tipoMovimento }}
+            <span [class.entrada]="mov.type === 'entrada'" [class.saida]="mov.type === 'saida'">
+              {{ mov.type }}
             </span>
           </td>
-          <td>{{ mov.quantidade }}</td>
-          <td>{{ mov.valorUnitario | currency:'BRL' }}</td>
-          <td><strong>{{ mov.valorTotal | currency:'BRL' }}</strong></td>
-          <td>{{ mov.responsavel }}</td>
-          <td>{{ mov.observacao }}</td>
+          <td>{{ mov.quantity }}</td>
+          <td>{{ mov.unitPrice | currency:'BRL' }}</td>
+          <td><strong>{{ mov.totalValue | currency:'BRL' }}</strong></td>
+          <td>{{ mov.responsible }}</td>
+          <td>{{ mov.observation }}</td>
         </tr>
 
         <!-- Linha de Totalizador no Rodapé da Tabela -->
-        <tr class="total-row" *ngIf="movimentos.length > 0">
+        <tr class="total-row" *ngIf="movements.length > 0">
           <td colspan="6">TOTAL DO PERÍODO</td>
           <td>{{ getTotal() | currency:'BRL' }}</td>
         </tr>
       </tbody>
     </table>
 
-    <div *ngIf="!loading && movimentos.length === 0" class="no-data">
+    <div *ngIf="!loading && movements.length === 0" class="no-data">
       <i class="material-icons" style="font-size: 48px; color: #ccc;">inbox</i>
       <p>Nenhum movimento encontrado no período selecionado.</p>
       <small>Tente ajustar as datas ou verificar se há vendas/compras registradas.</small>

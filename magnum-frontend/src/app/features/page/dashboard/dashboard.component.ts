@@ -1,29 +1,32 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild, NO_ERRORS_SCHEMA, Output, EventEmitter, OnDestroy, AfterViewInit, ElementRef, Input, SimpleChanges, OnChanges } from '@angular/core';
-import { ProdutoService } from '../../core/services/produto.service';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, NO_ERRORS_SCHEMA, Output, EventEmitter, OnDestroy, AfterViewInit, ElementRef, Input, SimpleChanges, OnChanges, Inject } from '@angular/core';
+import { ProdutoService } from '../../../core/services/produto.service';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth.service';
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { LoadingComponent } from './loading/loading.component';
+import { LoadingComponent } from '../../dashboard/loading/loading.component';
 import { finalize, forkJoin, Subscription, tap, timeout } from 'rxjs';
-import { AlertService } from '../../core/services/alert.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { Chart, ChartConfiguration, ChartData, ChartOptions, ChartType } from 'chart.js';
-import { DashboardService } from '../../core/services/dashboard.service';
-import { environment } from '../../../environments/environment';
+import { DashboardService } from '../../../core/services/dashboard.service';
+import { environment } from '../../../../environments/environment';
 import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
-import { LoadingChartComponent } from './loading-chart/loading-chart.component';
-import { Resumo } from '../../core/models/resumo.model';
+import { LoadingChartComponent } from '../../dashboard/loading-chart/loading-chart.component';
+import { Resumo } from '../../../core/models/resumo.model';
 // import { saveAs } from 'file-saver';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
-import { DeleteComponent } from '../../shared/components/delete/delete.component';
-import { ModalService } from '../../core/services/modal.service';
-import { Produto } from '../../core/models/produto.model';
+import { DeleteComponent } from '../../../shared/components/delete/delete.component';
+import { ModalService } from '../../../core/services/modal.service';
+import { Produto } from '../../../core/models/produto.model';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { StockAlertComponent } from './stock-alert/stock-alert.component';
-import { PercentagePipe } from '../../shared/pipes/percentage-pipe';
-import { RealtimeService } from '../../core/services/realtime.service';
-import { NotificationService } from '../../core/services/notification.service';
-import { TesteAlertService } from '../../core/services/teste-alert.service';
+import { StockAlertComponent } from '../../dashboard/stock-alert/stock-alert.component';
+import { PercentagePipe } from '../../../shared/pipes/percentage-pipe';
+import { RealtimeService } from '../../../core/services/realtime.service';
+import { NotificationService } from '../../../core/services/notification.service';
+import { TesteAlertService } from '../../../core/services/teste-alert.service';
 import { MagnumDesignSystemModule } from 'magnum-design-system';
+import { DashboardServiceMock } from '../../../shared/services/dashboard.service.mock';
+import { ProductServiceMock } from '../../../shared/services/product.service.mock';
+import { Product } from '../../../shared/models/mock-data';
 
 @Component({
   selector: 'app-dashboard',
@@ -127,18 +130,20 @@ export class DashboardComponent implements OnInit {
 
   public configuradas: any[] = [];
 
+  stats: any;
+
+  product: Product[] = [];
+  
   constructor(
     private produtoService: ProdutoService,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
     private alertService: AlertService,
     private dashboardService: DashboardService,
-    private sanitizer: DomSanitizer,
     private fb: FormBuilder,
-    private modalService: ModalService,
-    private realtimeService: RealtimeService,
-    private notificationService: NotificationService,
-    private testealertService: TesteAlertService
+    private testealertService: TesteAlertService,
+    private dashService: DashboardServiceMock,
+    private prodService: ProductServiceMock
   ) {
     this.form = this.fb.group({
       nome: ['', [Validators.required, Validators.pattern(/^[a-zA-ZÀ-ÿ\s.\-0-9]+$/)]],
@@ -153,12 +158,33 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.isAdmin = this.authService.isAdmin();
 
-    this.carregarDadosIniciais();
-    // this.carregarGraficos();
-    this.buscarProdutos();
+    this.dashboradStats();
+    this.prodStats();
+    // this.carregarDadosIniciais();
+    this.carregarGraficos();
+    // this.buscarProdutos();
     // this.carregarResumo();
-    this.carregarProdutos();
+    // this.carregarProdutos();
     this.iniciarRelogio();
+  }
+
+  dashboradStats() {
+    this.loading = true;
+    this.dashService.getDashboardStats().subscribe(data => {
+      this.stats = data;
+      console.log('Dados do Dashboard', data);
+      this.mostrarErro("Produtos com sucesso!", "success");
+      this.loading = false;
+      this.cdr.detectChanges();
+    }
+    )
+  }
+
+  prodStats() {
+    this.prodService.getProducts().subscribe(data => {
+      this.product = data;
+      this.dataHoraAtualizacao = new Date().toLocaleString('pt-BR');
+    })
   }
 
   ngOnDestroy(): void {
@@ -372,8 +398,16 @@ export class DashboardComponent implements OnInit {
     return this.resumo?.semEstoque ? this.resumo.semEstoque > 0 : false;
   }
 
+  // get gridColumns() {
+  //   return this.isAdmin ? 'auto auto auto auto' : 'auto auto';
+  // }
+
   get gridColumns() {
-    return this.isAdmin ? 'auto auto auto auto' : 'auto auto';
+    return 'auto auto auto auto';
+  }
+
+  get gridColumns2() {
+    return 'auto auto';
   }
 
   // Função para selecionar/desmarcar todos
@@ -514,13 +548,14 @@ export class DashboardComponent implements OnInit {
     plugins: {
       legend: {
         display: true,
-        position: 'top',
+        position: 'top'
       },
       title: {
         display: true,
         text: 'Produtos por Categoria'
       }
-    }
+    },
+    maintainAspectRatio: false
   };
 
   public pieChartLabels: string[] = [];
@@ -541,6 +576,7 @@ export class DashboardComponent implements OnInit {
     plugins: {
       legend: {
         display: false,
+        position: 'top'
       },
       title: {
         display: true,
@@ -556,7 +592,8 @@ export class DashboardComponent implements OnInit {
           }
         }
       }
-    }
+    },
+    maintainAspectRatio: false
   };
 
   public barChartLabels: string[] = [];
@@ -694,14 +731,35 @@ export class DashboardComponent implements OnInit {
       }
     };
 
-    this.dashboardService.getProdutosPorCategoria().subscribe({
+    // this.dashboardService.getProdutosPorCategoria().subscribe({
+    //   next: (dados) => {
+    //     this.pieChartLabels = dados.map(d => d.categoria);
+    //     this.pieChartData = {
+    //       labels: this.pieChartLabels,
+    //       datasets: [{
+    //         data: dados.map(d => d.quantidade),
+    //         backgroundColor: dados.map(d => d.cor || this.gerarCorAleatoria())
+    //       }]
+    //     };
+    //     finalizarRequisicao(); // Avisa que terminou essa parte
+    //   },
+    //   error: (err) => {
+    //     console.error('Erro no gráfico de pizza', err);
+    //     this.testealertService.danger(
+    //       'Erro no gráfico de pizza'
+    //     );
+    //     finalizarRequisicao(); // Conta como concluído (mesmo com erro) pra não travar a tela
+    //   }
+    // });
+
+    this.prodService.getProducts().subscribe({
       next: (dados) => {
-        this.pieChartLabels = dados.map(d => d.categoria);
+        this.pieChartLabels = dados.map(d => d.category);
         this.pieChartData = {
           labels: this.pieChartLabels,
           datasets: [{
-            data: dados.map(d => d.quantidade),
-            backgroundColor: dados.map(d => d.cor || this.gerarCorAleatoria())
+            data: dados.map(d => d.stock),
+            backgroundColor: ["#498392", "#947573"]
           }]
         };
         finalizarRequisicao(); // Avisa que terminou essa parte
@@ -715,14 +773,13 @@ export class DashboardComponent implements OnInit {
       }
     });
 
-    // 2. Carregar Top 5 Produtos (Barras)
-    this.dashboardService.getTop5ProdutosCaros().subscribe({
+    this.prodService.getProducts().subscribe({
       next: (dados) => {
-        this.barChartLabels = dados.map(d => d.nome);
+        this.barChartLabels = dados.map(d => d.name);
         this.barChartData = {
           labels: this.barChartLabels,
           datasets: [{
-            data: dados.map(d => d.preco),
+            data: dados.map(d => d.price),
             label: 'Preço (R$)',
             backgroundColor: '#36A2EB'
           }]
@@ -737,6 +794,29 @@ export class DashboardComponent implements OnInit {
         finalizarRequisicao();
       }
     });
+
+    // 2. Carregar Top 5 Produtos (Barras)
+    // this.dashboardService.getTop5ProdutosCaros().subscribe({
+    //   next: (dados) => {
+    //     this.barChartLabels = dados.map(d => d.nome);
+    //     this.barChartData = {
+    //       labels: this.barChartLabels,
+    //       datasets: [{
+    //         data: dados.map(d => d.preco),
+    //         label: 'Preço (R$)',
+    //         backgroundColor: '#36A2EB'
+    //       }]
+    //     };
+    //     finalizarRequisicao(); // Avisa que terminou essa parte
+    //   },
+    //   error: (err) => {
+    //     console.error('Erro no gráfico de barras', err);
+    //     this.testealertService.danger(
+    //       'Erro no gráfico de barras'
+    //     );
+    //     finalizarRequisicao();
+    //   }
+    // });
   }
 
   prepararGraficos(categorias: any, topProdutos: any) {
@@ -787,7 +867,7 @@ export class DashboardComponent implements OnInit {
           datasets: [{
             data: dados.map(d => d.preco),
             label: 'Preço (R$)',
-            backgroundColor: [ '#667eea', '#764ba2' ]
+            backgroundColor: ['#667eea', '#764ba2']
           }]
         };
       },

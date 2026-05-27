@@ -1,21 +1,96 @@
-header {
-    background-color: var(--yellow-500);
-    height: 77px;
-    border-bottom: 1px solid var(--mds-header-border);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    font-family: Arial, sans-serif;
+/* Estilo Base (Desktop) */
+.main-header {
+    background-color: #FFD700;
+    /* Amarelo do seu design */
+    padding: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.container {
-    margin: 0px 30px;
-    padding: 0 16px;
-    height: 100%;
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.logo_text span {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #333;
+}
+
+.user-actions {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    gap: 15px;
 }
 
-.logo_text {
-    font-size: 20px;
-    font-weight: bold;
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.user-icon {
+    font-size: 24px;
+    color: #333;
+}
+
+.user-text p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.user-role {
+    font-size: 0.8rem !important;
+    color: #666 !important;
+}
+
+/* --- RESPONSIVIDADE PARA CELULAR (MOBILE) --- */
+@media (max-width: 1200px) {
+    .header-container {
+        flex-direction: column;
+        /* Empilha os itens verticalmente */
+        align-items: stretch;
+        /* Estica os itens para ocupar toda a largura */
+        gap: 15px;
+    }
+
+    .logo_text {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .nav-menu {
+        order: 3;
+        /* Move o menu para baixo se necessário, ou ajuste conforme seu navbar */
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .user-actions {
+        justify-content: space-between;
+        /* Espalha usuário e botão de notificação */
+        width: 100%;
+        padding-top: 10px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
+        /* Linha separadora sutil */
+    }
+
+    .user-info {
+        gap: 5px;
+    }
+
+    .user-text p {
+        font-size: 0.8rem;
+        /* Texto menor no mobile */
+    }
+
+    .user-role {
+        display: none;
+        /* Oculta o cargo "(User)" no mobile para economizar espaço */
+    }
 }
